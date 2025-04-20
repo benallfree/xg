@@ -1,0 +1,8 @@
+name = "x-games"
+compatibility_date = "2025-04-03"
+main = "./server/index.ts"
+
+[assets]
+  directory = "./dist/client"
+  binding = "ASSETS"
+  not_found_handling = "single-page-application"

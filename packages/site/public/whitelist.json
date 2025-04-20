@@ -1,0 +1,13 @@
+{
+  "games": [
+    {
+      "slug": "sugarglide",
+      "url": "https://sugarglide.benallfree.com",
+      "imageUrl": "/games/sugarglide/splash.jpg",
+      "title": "Sugar Glide",
+      "description": "Guide flying squirrels through the trees with their adorable baby squirrels in this fun gliding adventure!",
+      "author": "@benallfree",
+      "communityId": "1914050686272286940"
+    }
+  ]
+}

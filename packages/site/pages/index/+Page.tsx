@@ -1,3 +1,6 @@
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
 import { GameCard } from '../../components/GameCard'
 import { container, gamesGrid, headerSection } from './style.css'
@@ -32,7 +35,7 @@ export default function Page() {
           rel="noopener noreferrer"
           className="btn btn-primary"
         >
-          X Community
+          <FontAwesomeIcon icon={faXTwitter} /> Community
         </a>
         <a
           href="https://github.com/benallfree/xg/blob/main/add.md"
@@ -40,7 +43,7 @@ export default function Page() {
           rel="noopener noreferrer"
           className="btn btn-primary"
         >
-          Add Your Game
+          <FontAwesomeIcon icon={faPlus} /> Add Your Game
         </a>
       </div>
       <div className={gamesGrid}>

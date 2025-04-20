@@ -1,0 +1,26 @@
+{
+  "name": "xgames-root",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "typescript": "^5.8.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "semi": false,
+    "printWidth": 120,
+    "tabWidth": 2,
+    "useTabs": false,
+    "plugins": [
+      "prettier-plugin-organize-imports"
+    ]
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

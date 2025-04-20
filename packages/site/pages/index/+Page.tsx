@@ -46,6 +46,18 @@ export default function Page() {
           <FontAwesomeIcon icon={faPlus} /> Add Your Game
         </a>
       </div>
+      <div className="m-4">
+        What is xg? See the{' '}
+        <a
+          href="https://x.com/benallfree/status/1914013553935466581"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link link-primary"
+        >
+          post that started it all
+        </a>
+        .
+      </div>
       <div className={gamesGrid}>
         {games.map((game) => (
           <GameCard key={game.url} game={game} />

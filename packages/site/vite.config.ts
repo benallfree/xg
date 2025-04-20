@@ -5,8 +5,12 @@ import react from '@vitejs/plugin-react'
 import vike from 'vike/plugin'
 import { defineConfig } from 'vite'
 
+const plugins = [vike(), react({}), vanillaExtractPlugin(), tailwindcss()]
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(cloudflare())
+}
 export default defineConfig({
-  plugins: [vike(), react({}), vanillaExtractPlugin(), tailwindcss(), cloudflare()],
+  plugins,
   build: {
     target: 'es2022',
   },

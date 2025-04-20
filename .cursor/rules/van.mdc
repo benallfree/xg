@@ -1,0 +1,183 @@
+---
+description: dealing with van, vanjs, van-x, or content.ts injection script
+globs: 
+alwaysApply: false
+---
+# VanJS: Core Concepts and API Reference
+
+## Overview
+
+VanJS is a lightweight framework that focuses on three core functionalities:
+
+- DOM composition/manipulation
+- State management
+- State binding
+
+> "The best solution is usually the one with the least unnecessary complexity" - Occam's Razor
+
+## DOM Composition
+
+### Basic Usage
+
+```javascript
+const { a, div, li, p, ul } = van.tags
+
+const Hello = () => div(p('👋Hello'), ul(li('🗺️World'), li(a({ href: 'https://vanjs.org/' }, '🍦VanJS'))))
+
+van.add(document.body, Hello())
+```
+
+Key differences from React:
+
+- Pure JavaScript without transpilation
+- No virtual DOM layer
+- Direct DOM object manipulation
+- Components are vanilla JavaScript functions
+
+### Tag Functions (van.tags)
+
+#### API Reference
+
+```typescript
+tagFunction([props], ...children) => HTMLElement
+```
+
+Parameters:
+
+- `props`: Optional object with HTML element properties
+- `children`: Zero or more child nodes (DOM nodes, primitives, State objects, or functions)
+
+Properties can be:
+
+- Primitive values (string, number, boolean, bigint)
+- null
+- State objects
+- Functions for derived properties
+
+## State Management
+
+### Basic State (van.state)
+
+```javascript
+const counter = van.state(0) // Create state
+counter.val // Get value
+counter.val = 1 // Set value
+```
+
+Key characteristics:
+
+- Immutable .val property
+- Triggers UI updates on value changes
+- Supports primitive values and objects
+
+### Derived State (van.derive)
+
+```javascript
+const doubled = van.derive(() => counter.val * 2)
+```
+
+Features:
+
+- Automatically updates when dependencies change
+- Read-only
+- Can depend on multiple states
+- Supports side effects
+
+## State Binding
+
+### Property Binding
+
+```javascript
+// State as property
+div({ class: myState })
+
+// Derived property
+div({ class: () => `status-${myState.val}` })
+```
+
+### Child Node Binding
+
+```javascript
+// State as child
+div(textState)
+
+// Derived child
+div(() => `Count: ${counter.val}`)
+```
+
+### Event Handler Binding
+
+```javascript
+// Direct handler
+button({ onclick: () => counter.val++ })
+
+// Derived handler
+button({ onclick: van.derive(() => (isEnabled.val ? () => counter.val++ : null)) })
+```
+
+## Advanced Features
+
+### Stateful Binding
+
+- Allows DOM mutation instead of regeneration
+- Optimizes performance for complex updates
+- Takes current DOM node as parameter
+
+```javascript
+div((dom) => {
+  if (shouldUpdate) return newNode
+  // Modify existing dom
+  return dom
+})
+```
+
+### Polymorphic Binding
+
+Supports multiple value types:
+
+- Static values
+- State objects
+- Binding functions
+
+```javascript
+const val = (v) => {
+  const protoOfV = Object.getPrototypeOf(v ?? 0)
+  if (protoOfV === stateProto) return v.val
+  if (protoOfV === Function.prototype) return v()
+  return v
+}
+```
+
+## Best Practices
+
+1. Component Organization
+
+   - Capitalize component names
+   - Keep components pure when possible
+   - Use functional composition
+
+2. State Management
+
+   - Keep states minimal
+   - Use derived states for computed values
+   - Avoid unnecessary state updates
+
+3. Performance
+   - Use stateful binding for complex updates
+   - Minimize DOM regeneration
+   - Keep binding functions simple
+
+## Core APIs
+
+1. `van.tags` - DOM element creation
+2. `van.add` - Add elements to DOM
+3. `van.state` - Create reactive state
+4. `van.derive` - Create derived state
+5. `van.hydrate` - SSR hydration
+
+## Limitations
+
+1. State-derived child nodes cannot return arrays
+2. Removed nodes (null/undefined) cannot be restored
+3. DOM nodes must not be already connected
+4. State.val is immutable

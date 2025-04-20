@@ -1,0 +1,139 @@
+---
+description: any time dealing with css
+globs:
+alwaysApply: false
+---
+
+# Vanilla Extract
+
+Zero-runtime CSS-in-TypeScript solution that generates static CSS files at build time.
+
+## Installation
+
+```bash
+npm install @vanilla-extract/css
+```
+
+## Key Features
+
+- **Zero Runtime** - All styles are generated at build time
+- **Type-safe** - Full TypeScript support
+- **Framework Agnostic** - Works with webpack, esbuild, Vite, Next.js
+- **First-class Theming** - Create single or multiple themes with type-safe token contracts
+- **Real CSS Output** - Generates actual CSS files, no runtime CSS-in-JS overhead
+
+## Core APIs
+
+### Basic Styling
+
+```typescript
+import { style } from '@vanilla-extract/css'
+
+export const className = style({
+  display: 'flex',
+  flexDirection: 'column',
+  // Supports nested selectors
+  selectors: {
+    '&:nth-child(2n)': {
+      background: 'aliceblue',
+    },
+  },
+  // Media queries
+  '@media': {
+    'screen and (min-width: 768px)': {
+      flexDirection: 'row',
+    },
+  },
+})
+```
+
+### Theming
+
+```typescript
+import { createTheme } from '@vanilla-extract/css'
+
+export const [themeClass, vars] = createTheme({
+  color: {
+    brand: 'blue',
+    white: '#fff',
+  },
+  space: {
+    small: '4px',
+    medium: '8px',
+  },
+})
+```
+
+### CSS Variables
+
+```typescript
+import { createVar, style } from '@vanilla-extract/css'
+
+const shadowColor = createVar()
+
+export const shadow = style({
+  boxShadow: `0 0 10px ${shadowColor}`,
+  selectors: {
+    '.light &': {
+      vars: { [shadowColor]: 'black' },
+    },
+    '.dark &': {
+      vars: { [shadowColor]: 'white' },
+    },
+  },
+})
+```
+
+### Style Variants
+
+```typescript
+import { styleVariants } from '@vanilla-extract/css'
+
+export const background = styleVariants({
+  primary: { background: 'navy' },
+  secondary: { background: 'blue' },
+  tertiary: { background: 'aqua' },
+})
+```
+
+## Output
+
+Generates standard CSS files with unique class names and CSS variables:
+
+```css
+:root {
+  --space-none__ya5b7b0: 0;
+  --space-small__ya5b7b1: 4px;
+  --space-medium__ya5b7b2: 8px;
+  --space-large__ya5b7b3: 12px;
+}
+
+.Hero_container__1ldw6lo0 {
+  padding: var(--space-medium__ya5b7b2);
+}
+```
+
+## Official Integrations
+
+- Astro
+- esbuild
+- Gatsby
+- Next.js
+- Parcel
+- Remix
+- Rollup
+- Vite
+- Webpack
+
+## Additional Packages
+
+- Sprinkles
+- Recipes
+- Dynamic
+- CSS Utils
+
+## Resources
+
+- [Official Documentation](mdc:https:/vanilla-extract.style)
+- [GitHub Discussions](mdc:https:/github.com/vanilla-extract-css/vanilla-extract/discussions)
+- [Discord Community](mdc:https:/discord.gg/vanilla-extract)

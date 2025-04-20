@@ -1,0 +1,114 @@
+---
+description: dealing with van, vanjs, van-x, or content.ts injection script
+globs: 
+alwaysApply: false
+---
+# VanX: The 1.2kB Official VanJS Extension
+
+## Overview
+
+VanX is the official extension of VanJS, providing utility functions to make VanJS more ergonomic and developer-friendly. It's ultra-lightweight at just 1.2kB gzipped.
+
+## Installation
+
+### NPM
+
+```bash
+npm install vanjs-ext
+```
+
+### Import Methods
+
+```javascript
+// Full import
+import * as vanX from 'vanjs-ext'
+
+// Selective import
+import { specificFunctions } from 'vanjs-ext'
+```
+
+### CDN
+
+```html
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanjs-ext@0.6.2/dist/van-x.nomodule.min.js"></script>
+```
+
+## Core Features
+
+### 1. Reactive Objects (vanX.reactive)
+
+- Creates a single reactive object with multiple state fields
+- Supports deeply nested structures
+- Example:
+
+```javascript
+const obj = vanX.reactive({
+  a: 1,
+  b: {
+    c: 2,
+    d: 3,
+  },
+})
+```
+
+### 2. Calculated Fields (vanX.calc)
+
+- Similar to derived states in VanJS
+- Avoid self-referencing in calculations
+- Example:
+
+```javascript
+const derived = vanX.reactive({
+  fullName: vanX.calc(() => `${data.name.first} ${data.name.last}`),
+})
+```
+
+### 3. Reactive Lists (vanX.list)
+
+- Minimizes re-rendering on updates
+- Supports calculated fields as items
+- Handles array holes automatically
+
+### 4. Smart Updates (vanX.replace)
+
+- Performs efficient diff/update operations
+- Updates only changed leaf-level fields
+- Ideal for server-driven UI updates
+
+### 5. State Management
+
+- Supports global app state consolidation
+- Enables state serialization
+- Compatible with localStorage persistence
+
+## Key APIs
+
+1. `vanX.reactive(obj)` - Creates reactive objects
+2. `vanX.calc(f)` - Creates calculated fields
+3. `vanX.stateFields(obj)` - Gets underlying State objects
+4. `vanX.list(container, items, renderer)` - Creates reactive lists
+5. `vanX.replace(obj, replacement)` - Smart object updates
+6. `vanX.compact(obj)` - Eliminates array holes for serialization
+
+## Best Practices
+
+1. Wrap sub-field access in binding functions
+2. Avoid aliasing sub-fields of reactive objects
+3. Store calculated fields separately
+4. Use `vanX.replace` instead of direct assignment for object updates
+5. Use `vanX.compact` before serialization
+
+## Use Cases
+
+1. Form handling with nested state
+2. Real-time data updates
+3. Server-driven UI (SDUI)
+4. State persistence
+5. Complex list management
+
+## Limitations
+
+1. No self-referencing in calculated fields
+2. Original objects shouldn't be accessed after reactive conversion
+3. No State fields in passed objects
+4. Sub-field access must be wrapped in binding functions

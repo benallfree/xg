@@ -2,18 +2,9 @@ import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
+import type { Game } from '../../../site/components/GameCard'
 import { GameCard } from '../../components/GameCard'
 import { container, gamesGrid, headerSection } from './style.css'
-
-interface Game {
-  slug: string
-  url: string
-  imageUrl: string
-  title: string
-  description: string
-  author: string
-  communityId: string
-}
 
 export default function Page() {
   const [games, setGames] = useState<Game[]>([])

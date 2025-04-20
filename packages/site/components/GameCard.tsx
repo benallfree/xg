@@ -2,7 +2,8 @@ import { faGithub, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { gameCard, gameDescription, gameMeta, gameThumbnail, gameTitle } from './GameCard.css'
-interface Game {
+
+export interface Game {
   slug: string
   url: string
   imageUrl: string

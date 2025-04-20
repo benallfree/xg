@@ -1,107 +1,173 @@
 import van from 'vanjs-core'
+import { Game } from '../../site/components/GameCard'
 
-const { div, iframe } = van.tags
+const { div, button, a, iframe } = van.tags
 
 console.log('Xgames loaded')
 
-// Global flag to track if game is already embedded
-let isGameEmbedded = false
+// Types
+type ApprovalStatus = 'ask' | 'always' | 'never'
 
-// Check if we're in a compatible community
-const findCommunityPost = () => {
-  // Only proceed if we're on a specific post URL
-  if (!window.location.pathname.match(/\/[^\/]+\/status\/\d+$/)) return null
-
-  // Look for any top-level post (not replies)
-  const postText = document.querySelector('div[data-testid="tweetText"]')
-  if (!postText) return null
-
-  // Find the article element containing this post
-  const article = postText.closest('article')
-  if (!article) return null
-
-  // Check if this is a top-level post by looking for reply indicators
-  const isReply = article.querySelector('[data-testid="socialContext"]')
-  if (isReply) return null
-
-  return article
+interface CommunityPreference {
+  approvalStatus: ApprovalStatus
 }
 
-// Function to check and potentially start the game
-const checkAndStartGame = () => {
-  const testPost = findCommunityPost()
+let currentGameContainer: HTMLElement | null = null
 
-  // If we're not in the community anymore but the scene is active, destroy it
-  if (!testPost) {
-    console.log('Left community or valid post not found')
-    if (westernScene) {
-      westernScene.destroy()
-      westernScene = null
-    }
-    // Remove any existing game iframes
-    document.querySelectorAll('iframe').forEach((iframe) => {
-      if (iframe.src === 'https://sugarglide.benallfree.com') {
-        iframe.remove()
-      }
-    })
-    isGameEmbedded = false
-    return
-  }
-
-  // Start the game if we found the post and it's not already running
-  if (!westernScene && !document.hidden && testPost) {
-    // Remove any existing game iframes first
-    document.querySelectorAll('iframe').forEach((iframe) => {
-      if (iframe.src === 'https://sugarglide.benallfree.com') {
-        iframe.remove()
-        isGameEmbedded = false
-      }
-    })
-
-    if (!isGameEmbedded) {
-      console.log('Scene opened')
-      playRandomDraw() // Play the draw sound when scene appears
-      isGameEmbedded = true
-
-      // Create a container for the game using VanJS
-      const gameContainer = iframe({
-        src: 'https://sugarglide.benallfree.com',
-        style: `
-          height: 400px;
-          margin-left: 10px;
-          margin-right: 10px;
-          margin-top: 10px;
-          margin-bottom: 10px;
-          border: none;
-          border-radius: 16px;
-          overflow: hidden;
-        `,
-      })
-
-      // Insert the container after the article
-      testPost.parentNode?.insertBefore(gameContainer, testPost.nextSibling)
-
-      // No need to create western scene for iframe
-      westernScene = null
-    }
-  }
+// Fetch whitelist and check if community is allowed
+const fetchWhitelist = async (): Promise<Game[]> => {
+  const response = await fetch('https://xg.benallfree.com/whitelist.json')
+  if (!response.ok) throw new Error('Failed to fetch whitelist')
+  const data = await response.json()
+  return data.games
 }
 
-// Handle visibility change
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    if (westernScene) {
-      westernScene.destroy()
-      westernScene = null
-    }
-  } else {
-    checkAndStartGame()
+// Get community ID from page content
+const getCommunityId = () => {
+  const communityLink = document.querySelector('a[href*="/communities/"]')
+  if (!communityLink) return null
+
+  const match = communityLink.getAttribute('href')?.match(/\/communities\/(\d+)/)
+  return match ? match[1] : null
+}
+
+// Save preference to chrome storage
+const savePreference = (communityId: string, status: ApprovalStatus) => {
+  chrome.storage.sync.get(['preferences'], (result: { preferences?: Record<string, CommunityPreference> }) => {
+    const preferences = result.preferences || {}
+    preferences[communityId] = { approvalStatus: status }
+    chrome.storage.sync.set({ preferences })
+  })
+}
+
+// Get preference from chrome storage
+const getPreference = async (communityId: string): Promise<CommunityPreference | undefined> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['preferences'], (result: { preferences?: Record<string, CommunityPreference> }) => {
+      resolve(result.preferences?.[communityId])
+    })
+  })
+}
+
+// Create game container with controls
+const createGameContainer = (game: Game, article: HTMLElement) => {
+  if (currentGameContainer) {
+    currentGameContainer.remove()
   }
-})
+
+  const container = div(
+    {
+      style: `
+        margin: 10px;
+        padding: 10px;
+        border-radius: 16px;
+        background: #f0f0f0;
+        color: #000;
+      `,
+    },
+    div(
+      { style: 'margin-bottom: 10px;' },
+      'This post contains an X Game. Please note that X Games does not maintain or verify third-party games. Be cautious of potential scams.'
+    ),
+    div(
+      { style: 'display: flex; gap: 10px; margin-bottom: 10px;' },
+      button(
+        {
+          onclick: () => {
+            embedGame(game)
+            savePreference(game.slug, 'ask')
+          },
+          style: 'padding: 5px 10px; border-radius: 4px; background: #0070f3; color: white; border: none;',
+        },
+        'Play Once'
+      ),
+      button(
+        {
+          onclick: () => {
+            embedGame(game)
+            savePreference(game.slug, 'always')
+          },
+          style: 'padding: 5px 10px; border-radius: 4px; background: #0070f3; color: white; border: none;',
+        },
+        'Always Play'
+      ),
+      button(
+        {
+          onclick: () => {
+            savePreference(game.slug, 'never')
+            container.remove()
+          },
+          style: 'padding: 5px 10px; border-radius: 4px; background: #ff4444; color: white; border: none;',
+        },
+        'Never Play'
+      )
+    )
+  )
+
+  currentGameContainer = container
+  article.parentNode?.insertBefore(container, article.nextSibling)
+}
+
+// Embed the game iframe
+const embedGame = (game: Game) => {
+  if (!currentGameContainer) return
+
+  const gameFrame = iframe({
+    src: game.url,
+    style: `
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 16px;
+      margin-top: 10px;
+    `,
+  })
+
+  const reportButton = a(
+    {
+      href: 'https://github.com/benallfree/xg/discussions/categories/q-a',
+      target: '_blank',
+      style: 'display: inline-block; margin-top: 10px; color: #666; text-decoration: underline;',
+    },
+    'Report an issue'
+  )
+
+  currentGameContainer.innerHTML = ''
+  currentGameContainer.appendChild(gameFrame)
+  currentGameContainer.appendChild(reportButton)
+}
+
+// Main function to check and handle game embedding
+const checkAndHandleGame = async () => {
+  const communityId = getCommunityId()
+  console.log('communityId', communityId)
+  if (!communityId) return
+
+  try {
+    const games = await fetchWhitelist()
+    const game = games.find((g) => g.slug === communityId)
+    if (!game) return
+
+    const article = document.querySelector('article')
+    if (!article) return
+
+    const preference = await getPreference(game.slug)
+
+    if (preference?.approvalStatus === 'never') return
+    if (preference?.approvalStatus === 'always') {
+      createGameContainer(game, article)
+      embedGame(game)
+    } else {
+      createGameContainer(game, article)
+    }
+  } catch (error) {
+    console.error('Error handling game:', error)
+  }
+}
 
 // Create a mutation observer to watch for URL/content changes
 const observer = new MutationObserver(() => {
-  checkAndStartGame()
+  checkAndHandleGame()
 })
 
 // Start observing the document for changes
@@ -111,4 +177,4 @@ observer.observe(document.body, {
 })
 
 // Initial check
-checkAndStartGame()
+checkAndHandleGame()

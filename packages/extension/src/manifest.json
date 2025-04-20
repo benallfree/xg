@@ -1,0 +1,16 @@
+{
+  "name": "X Games",
+  "description": "Embed and manage games in X communities",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.ts"]
+    }
+  ]
+}

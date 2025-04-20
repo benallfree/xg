@@ -48,6 +48,7 @@ export const gameMeta = style({
   fontSize: '0.9rem',
   padding: '12px 0 0',
   borderTop: '1px solid #f0f0f0',
+  gap: '8px',
 })
 
 globalStyle(`${gameMeta} a`, {
@@ -57,9 +58,24 @@ globalStyle(`${gameMeta} a`, {
   borderRadius: '16px',
   backgroundColor: '#f8fafc',
   transition: 'all 0.2s ease',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
 })
 
 globalStyle(`${gameMeta} a:hover`, {
   backgroundColor: '#e8f5fe',
   color: '#0c7abf',
+})
+
+globalStyle(`${gameMeta} .sr-only`, {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  padding: '0',
+  margin: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  borderWidth: '0',
 })

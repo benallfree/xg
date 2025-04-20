@@ -6,6 +6,12 @@ export const container = style({
   padding: '24px',
 })
 
+export const headerSection = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+})
+
 export const gamesGrid = style({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',

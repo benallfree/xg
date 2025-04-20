@@ -50,7 +50,8 @@ Add your game's information to `packages/site/public/whitelist.json`:
       "title": "Your Game Title",
       "description": "A brief, engaging description of your game (max 150 characters)",
       "author": "@your-x-handle",
-      "communityId": "your-x-community-id"
+      "communityId": "your-x-community-id",
+      "githubUrl": "https://github.com/your-username/your-game-repo"
     }
   ]
 }
@@ -65,6 +66,10 @@ Add your game's information to `packages/site/public/whitelist.json`:
 - `description`: Brief description of your game
 - `author`: Your X (Twitter) handle
 - `communityId`: Your X Community ID from Step 1
+
+### Optional Fields
+
+- `githubUrl`: Link to your game's GitHub repository (if open source)
 
 ## Step 4: Submit a Pull Request
 

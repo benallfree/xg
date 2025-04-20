@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { GameCard } from '../../components/GameCard'
-import { container, gamesGrid } from './style.css'
+import { container, gamesGrid, headerSection } from './style.css'
 
 interface Game {
   slug: string
@@ -24,7 +24,25 @@ export default function Page() {
 
   return (
     <div className={container}>
-      <h1>X Games</h1>
+      <div className={headerSection}>
+        <h1>X Games</h1>
+        <a
+          href="https://x.com/i/communities/1914065447114396075"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-primary"
+        >
+          X Community
+        </a>
+        <a
+          href="https://github.com/benallfree/xg/blob/main/add.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-primary"
+        >
+          Add Your Game
+        </a>
+      </div>
       <div className={gamesGrid}>
         {games.map((game) => (
           <GameCard key={game.url} game={game} />

@@ -1,13 +1,5 @@
 {
   "extends": [
     "@parcel/config-webextension"
-  ],
-  "transformers": {
-    "*.css.ts": [
-      "@vanilla-extract/parcel-transformer"
-    ],
-    "*.mp3": [
-      "@parcel/transformer-raw"
-    ]
-  }
+  ]
 }

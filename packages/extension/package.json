@@ -9,11 +9,24 @@
   },
   "devDependencies": {
     "@parcel/config-webextension": "^2.14.4",
+    "@parcel/transformer-postcss": "^2.14.4",
     "@parcel/transformer-raw": "^2.14.4",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/chrome": "^0.0.315",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@vanilla-extract/parcel-transformer": "^1.0.14",
+    "daisyui": "^5.0.27",
     "parcel": "^2.14.4",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
     "vanjs-core": "^1.5.3",
-    "vanjs-ext": "^0.6.2"
-  }
+    "vanjs-ext": "^0.6.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "files": [
+    "dist"
+  ]
 }

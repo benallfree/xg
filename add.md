@@ -25,7 +25,7 @@ Your game's reliability directly affects our Chrome Web Store status. If your ga
 1. Create a new Community on X (Twitter) for your game
 2. Add this text to your community description:
    ```
-   Install the Xgames Chrome Extension to play https://x-games.benallfree.com
+   Install the X Games Chrome Extension to play https://x-games.benallfree.com
    ```
 3. Get your Community ID from the URL when viewing your community
    - Example: In `https://x.com/i/communities/1914050686272286940`, the ID is `1914050686272286940`

@@ -1,5 +1,6 @@
 import van from 'vanjs-core'
 import { Game } from '../../site/components/GameCard'
+import { Sponsor } from '../../site/server/sponsors'
 
 const { div, button, a, iframe } = van.tags
 
@@ -42,9 +43,15 @@ const loadWhitelist = async () => {
   if (!response.ok) throw new Error('Failed to fetch whitelist')
   const data = await response.json()
   games = Promise.resolve(data.games)
-  games.then((games) => {
-    console.log('games', games)
-  })
+}
+
+// Get sponsor
+const getSponsor = async (): Promise<Sponsor> => {
+  const response = await fetch('https://xg.benallfree.com/api/sponsor')
+  if (!response.ok) {
+    return { name: 'benallfree', tagline: 'Dank vibr' }
+  }
+  return response.json()
 }
 
 // Initial load and periodic refresh
@@ -83,7 +90,6 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
   if (currentGameContainer) {
     cleanupGameContainer()
   }
-  console.log('createGameContainer', game, article)
   const container = div(
     {
       style: `
@@ -190,7 +196,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
 }
 
 // Embed the game iframe
-const embedGame = (game: Game) => {
+const embedGame = async (game: Game) => {
   if (!currentGameContainer) return
 
   // Remove border and adjust styling for game display
@@ -222,17 +228,20 @@ const embedGame = (game: Game) => {
     'Report an issue'
   )
 
+  const sponsor = await getSponsor()
   const sponsorLink = div(
-    {},
-    `Sponsored by ❤️`,
+    { style: 'color: #666; font-size: 0.9em;' },
+    `Sponsored by ❤️ `,
     a(
       {
-        href: 'https://x.com/benallfree',
+        href: `https://x.com/${sponsor.name}`,
         target: '_blank',
         style: 'color: #1d9bf0',
       },
-      `@benallfree`
-    )
+      `@${sponsor.name}`
+    ),
+    ` - `,
+    sponsor.tagline
   )
 
   const linksContainer = div(

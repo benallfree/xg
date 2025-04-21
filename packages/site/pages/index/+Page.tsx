@@ -15,7 +15,7 @@ export default function Page() {
 
   return (
     <div className="mx-auto p-6">
-      <div className="flex flex-wrap gap-6 mt-6">
+      <div className="flex flex-wrap justify-center gap-6 mt-6">
         {games.map((game) => (
           <GameCard key={game.url} game={game} />
         ))}

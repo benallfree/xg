@@ -192,7 +192,7 @@ const embedGame = (game: Game) => {
 
   const reportButton = a(
     {
-      href: 'https://github.com/benallfree/xg/discussions/new?category=q-a',
+      href: 'https://x.com/i/communities/1914065447114396075',
       target: '_blank',
       style: 'display: inline-block; margin-top: 10px; color: #666; text-decoration: underline;',
     },

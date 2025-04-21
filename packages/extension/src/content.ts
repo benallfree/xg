@@ -173,6 +173,12 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
 const embedGame = (game: Game) => {
   if (!currentGameContainer) return
 
+  // Remove border and adjust styling for game display
+  currentGameContainer.style.border = 'none'
+  currentGameContainer.style.padding = '0'
+  currentGameContainer.style.background = 'none'
+  currentGameContainer.style.boxShadow = 'none'
+
   const gameFrame = iframe({
     src: game.url,
     style: `

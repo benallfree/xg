@@ -195,7 +195,10 @@ const embedGame = (game: Game) => {
 
   // Remove border and adjust styling for game display
   currentGameContainer.style.border = 'none'
+  currentGameContainer.style.borderBottom = '1px solid #374151'
+  currentGameContainer.style.borderRadius = '0'
   currentGameContainer.style.padding = '0'
+  currentGameContainer.style.paddingBottom = '10px'
   currentGameContainer.style.background = 'none'
   currentGameContainer.style.boxShadow = 'none'
 
@@ -214,14 +217,35 @@ const embedGame = (game: Game) => {
     {
       href: `https://github.com/benallfree/xg/discussions/new?category=q-a&title=Incident report: ${game.title} [${game.xCommunityId}]&body=x.com/i/communities/${game.xCommunityId}%0A%0A@${game.githubUsername}`,
       target: '_blank',
-      style: 'display: inline-block; margin-top: 10px; color: #666; text-decoration: underline;',
+      style: 'color: #666; text-decoration: underline;',
     },
     'Report an issue'
   )
 
+  const sponsorLink = div(
+    {},
+    `Sponsored by ❤️`,
+    a(
+      {
+        href: 'https://x.com/benallfree',
+        target: '_blank',
+        style: 'color: #1d9bf0',
+      },
+      `@benallfree`
+    )
+  )
+
+  const linksContainer = div(
+    {
+      style: 'display: flex; justify-content: space-between; margin-top: 10px; margin-left: 20px; margin-right: 20px;',
+    },
+    sponsorLink,
+    reportButton
+  )
+
   currentGameContainer.innerHTML = ''
   currentGameContainer.appendChild(gameFrame)
-  currentGameContainer.appendChild(reportButton)
+  currentGameContainer.appendChild(linksContainer)
 }
 
 // Cleanup function to remove game container

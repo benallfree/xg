@@ -7,6 +7,9 @@ export const gameCard = style({
   backgroundColor: '#fff',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
   transition: 'all 0.2s ease',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
   ':hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -33,7 +36,7 @@ export const gameDescription = style({
   fontSize: '0.95rem',
   color: '#4a5568',
   lineHeight: '1.5',
-  marginBottom: '16px',
+  marginBottom: 'auto',
   display: '-webkit-box',
   WebkitLineClamp: '2',
   WebkitBoxOrient: 'vertical',

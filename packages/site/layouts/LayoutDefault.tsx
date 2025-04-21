@@ -53,6 +53,12 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
           >
             Advertise with Us
           </a>
+          <a href="/privacy" className="link link-hover">
+            Privacy Policy
+          </a>
+          <a href="/terms" className="link link-hover">
+            Terms of Service
+          </a>
           <span className="text-sm opacity-75">
             What is X Games? See the{' '}
             <a

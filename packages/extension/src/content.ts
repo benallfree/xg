@@ -94,7 +94,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.xCommunityId, 'ask')
+            savePreference(game.slug, 'ask')
           },
           style: `
             padding: 8px 16px;
@@ -118,7 +118,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.xCommunityId, 'always')
+            savePreference(game.slug, 'always')
           },
           style: `
             padding: 8px 16px;
@@ -141,7 +141,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
       button(
         {
           onclick: () => {
-            savePreference(game.xCommunityId, 'never')
+            savePreference(game.slug, 'never')
             container.remove()
           },
           style: `

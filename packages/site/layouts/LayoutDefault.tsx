@@ -17,7 +17,7 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
       <footer className="footer footer-center p-4 bg-base-300 text-base-content">
         <div className="flex gap-4">
           <a
-            href="https://polar.sh/checkout/polar_c_sa5Ufn66qO35xmUFs7P0AXwqoI9ssq0kPVMWM3AnHab"
+            href="https://buy.polar.sh/polar_cl_kHsG7kp6B7PElpJbEO4xbzwzRMKKxIcgbN03C2zibvl"
             target="_blank"
             rel="noopener noreferrer"
             className="link link-hover"

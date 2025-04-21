@@ -60,6 +60,7 @@ const getPreference = async (communityId: string): Promise<CommunityPreference |
 // Create game container with controls
 const createGameContainer = (game: Game, article: HTMLElement) => {
   if (currentGameContainer) {
+    return
     currentGameContainer.remove()
   }
 
@@ -67,47 +68,99 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
     {
       style: `
         margin: 10px;
-        padding: 10px;
-        border-radius: 16px;
-        background: #f0f0f0;
-        color: #000;
+        padding: 16px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #1a1b26 0%, #1f2937 100%);
+        color: #e5e7eb;
+        border: 1px solid #374151;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), 0 0 8px rgba(88, 28, 255, 0.1);
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
       `,
     },
     div(
-      { style: 'margin-bottom: 10px;' },
-      'This post contains an X Game. Please note that X Games does not maintain or verify third-party games. Be cautious of potential scams.'
+      {
+        style: `
+          margin-bottom: 16px;
+          font-size: 15px;
+          line-height: 1.5;
+          color: #9ca3af;
+        `,
+      },
+      '🎮 This post contains an X Game. Please note that X Games does not maintain or verify third-party games. Be cautious of potential scams.'
     ),
     div(
-      { style: 'display: flex; gap: 10px; margin-bottom: 10px;' },
+      { style: 'display: flex; gap: 12px; margin-bottom: 10px;' },
       button(
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.slug, 'ask')
+            savePreference(game.communityId, 'ask')
           },
-          style: 'padding: 5px 10px; border-radius: 4px; background: #0070f3; color: white; border: none;',
+          style: `
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #4f46e5 0%, #4338ca 100%);
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.3);
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 0 16px rgba(79, 70, 229, 0.4);
+            }
+          `,
         },
-        'Play Once'
+        '🎯 Play Once'
       ),
       button(
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.slug, 'always')
+            savePreference(game.communityId, 'always')
           },
-          style: 'padding: 5px 10px; border-radius: 4px; background: #0070f3; color: white; border: none;',
+          style: `
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #4f46e5 0%, #4338ca 100%);
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.3);
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 0 16px rgba(79, 70, 229, 0.4);
+            }
+          `,
         },
-        'Always Play'
+        '🚀 Always Play'
       ),
       button(
         {
           onclick: () => {
-            savePreference(game.slug, 'never')
+            savePreference(game.communityId, 'never')
             container.remove()
           },
-          style: 'padding: 5px 10px; border-radius: 4px; background: #ff4444; color: white; border: none;',
+          style: `
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.2);
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 0 16px rgba(220, 38, 38, 0.3);
+            }
+          `,
         },
-        'Never Play'
+        '❌ Never Play'
       )
     )
   )

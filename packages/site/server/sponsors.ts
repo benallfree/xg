@@ -16,4 +16,8 @@ export const sponsors = [
     name: 'meinbiz',
     tagline: 'fastpocket.dev',
   },
+  {
+    name: 'dosediaryapp',
+    tagline: 'Simplify your GLP-1 tracking',
+  },
 ]

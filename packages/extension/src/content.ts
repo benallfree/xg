@@ -207,7 +207,7 @@ const embedGame = (game: Game) => {
 // Main function to check and handle game embedding
 const checkAndHandleGame = async () => {
   const communityId = getCommunityId()
-  console.log('communityId', communityId)
+  // console.log('communityId', communityId)
   if (!communityId) return
 
   try {
@@ -215,7 +215,7 @@ const checkAndHandleGame = async () => {
     const game = gamesList.find((g: Game) => g.xCommunityId === communityId)
     if (!game) return
 
-    console.log('found matching game', game)
+    // console.log('found matching game', game)
 
     const article = document.querySelector('article')
     if (!article) return

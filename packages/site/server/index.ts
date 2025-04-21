@@ -1,20 +1,43 @@
 /// <reference path="../worker-configuration.d.ts" />
 
+import { sponsors } from './sponsors'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
+const noCacheHeaders = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0',
+}
+
+let currentSponsorIndex = 0
+
 export default {
   async fetch(request, env): Promise<Response> {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
-        headers: corsHeaders,
+        headers: { ...corsHeaders, ...noCacheHeaders },
       })
     }
 
     const url = new URL(request.url)
+    if (url.pathname === '/api/sponsor') {
+      const sponsor = sponsors[currentSponsorIndex]
+      currentSponsorIndex = (currentSponsorIndex + 1) % sponsors.length
+
+      return new Response(JSON.stringify(sponsor), {
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+          ...noCacheHeaders,
+        },
+      })
+    }
+
     if (url.pathname.startsWith('/api/ping')) {
       // TODO: Add your custom /api/* logic here.
       return new Response('Ok', {
@@ -23,16 +46,6 @@ export default {
     }
     // Passes the incoming request through to the assets binding.
     // No asset matched this request, so this will evaluate `not_found_handling` behavior.
-    const response = await env.ASSETS.fetch(request)
-
-    // Clone the response to add CORS headers
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: {
-        ...Object.fromEntries(response.headers),
-        ...corsHeaders,
-      },
-    })
+    return env.ASSETS.fetch(request)
   },
 } satisfies ExportedHandler<Env>

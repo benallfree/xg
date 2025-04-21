@@ -152,6 +152,25 @@ const App: React.FC = () => {
             Advertise
           </a>
         </div>
+        <div className="text-xs space-x-2 opacity-70">
+          <a
+            href="https://xg.benallfree.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link link-hover"
+          >
+            Privacy Policy
+          </a>
+          <span>·</span>
+          <a
+            href="https://xg.benallfree.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link link-hover"
+          >
+            Terms of Service
+          </a>
+        </div>
       </div>
       {error ? (
         <ErrorState error={error} onRetry={fetchCommunities} isLoading={isLoading} />

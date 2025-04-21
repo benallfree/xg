@@ -1,5 +1,16 @@
 # x-games
 
+## 1.1.0
+
+### Minor Changes
+
+- 6d7d679: Add sponsorship and advertisement features with API endpoint
+
+### Patch Changes
+
+- 59c9c37: Make game tiles clickable
+- 6d7d679: Improve game card styles
+
 ## 1.0.1
 
 ### Patch Changes

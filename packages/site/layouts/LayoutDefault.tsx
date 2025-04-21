@@ -24,6 +24,17 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
           >
             Advertise with Us
           </a>
+          <span className="text-sm opacity-75">
+            What is X Games? See the{' '}
+            <a
+              href="https://x.com/benallfree/status/1914013553935466581"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link link-hover link-primary"
+            >
+              post that started it all
+            </a>
+          </span>
         </div>
       </footer>
     </div>

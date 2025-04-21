@@ -33,7 +33,11 @@ const GameItem: React.FC<{
 }> = ({ game, preference, onStatusChange }) => (
   <div className="card bg-base-200 shadow-sm">
     <figure className="h-24 overflow-hidden">
-      <img src={`https://xg.benallfree.com/${game.imageUrl}`} alt={game.title} className="w-full h-full object-cover" />
+      <img
+        src={`https://xg.benallfree.com/${game.imagePath}`}
+        alt={game.title}
+        className="w-full h-full object-cover"
+      />
     </figure>
     <div className="card-body p-3">
       <h3 className="card-title text-sm mb-1">{game.title}</h3>

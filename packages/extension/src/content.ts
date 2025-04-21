@@ -13,14 +13,22 @@ interface CommunityPreference {
 }
 
 let currentGameContainer: HTMLElement | null = null
+let games: Promise<Game[]> = Promise.resolve([])
 
-// Fetch whitelist and check if community is allowed
-const fetchWhitelist = async (): Promise<Game[]> => {
+// Fetch and cache whitelist
+const loadWhitelist = async () => {
   const response = await fetch('https://xg.benallfree.com/whitelist.json')
   if (!response.ok) throw new Error('Failed to fetch whitelist')
   const data = await response.json()
-  return data.games
+  games = Promise.resolve(data.games)
+  games.then((games) => {
+    console.log('games', games)
+  })
 }
+
+// Initial load and periodic refresh
+loadWhitelist()
+setInterval(loadWhitelist, 5 * 60 * 1000)
 
 // Get community ID from page content
 const getCommunityId = () => {
@@ -144,9 +152,11 @@ const checkAndHandleGame = async () => {
   if (!communityId) return
 
   try {
-    const games = await fetchWhitelist()
-    const game = games.find((g) => g.slug === communityId)
+    const gamesList = await games
+    const game = gamesList.find((g: Game) => g.communityId === communityId)
     if (!game) return
+
+    console.log('found matching game', game)
 
     const article = document.querySelector('article')
     if (!article) return

@@ -8,7 +8,7 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
     <div className="flex flex-col min-h-screen max-w-[900px] mx-auto">
       <div className="navbar bg-base-100">
         <div className="navbar-start">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl font-semibold text-primary">
             X Games<span className="hidden">Play the latest web games directly on X</span>
           </h1>
         </div>

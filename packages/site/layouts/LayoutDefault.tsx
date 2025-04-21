@@ -1,8 +1,37 @@
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
 
 export default function LayoutDefault({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen max-w-[900px] mx-auto">
+      <div className="navbar bg-base-100">
+        <div className="navbar-start">
+          <h1 className="text-2xl font-bold">
+            X Games<span className="hidden">Play the latest web games directly on X</span>
+          </h1>
+        </div>
+        <div className="navbar-end">
+          <a
+            href="https://x.com/i/communities/1914065447114396075"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-circle btn-ghost mr-2"
+            aria-label="Connect with us on X"
+          >
+            <FontAwesomeIcon icon={faXTwitter} />
+          </a>
+          <a
+            href="https://github.com/benallfree/xg/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            <FontAwesomeIcon icon={faDownload} />
+          </a>
+        </div>
+      </div>
       <div className="flex-grow">
         <div
           style={{

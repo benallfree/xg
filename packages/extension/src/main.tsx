@@ -1,13 +1,7 @@
 /// <reference types="chrome"/>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Game } from '../../site/components/GameCard'
-
-// Initialize FontAwesome library
-library.add(faXTwitter, faPlus)
 
 // Define approval status types
 const ApprovalStatus = {
@@ -31,7 +25,14 @@ const GameItem: React.FC<{
   preference?: CommunityPreference
   onStatusChange: (communityId: string, status: ApprovalStatusType) => void
 }> = ({ game, preference, onStatusChange }) => (
-  <div className="card bg-base-200 shadow-sm">
+  <div className="card bg-base-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 relative group">
+    <a
+      href={`https://x.com/i/communities/${game.xCommunityId}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="absolute inset-0 z-10"
+      aria-label={`Visit ${game.title} community`}
+    />
     <figure className="h-24 overflow-hidden">
       <img
         src={`https://xg.benallfree.com/${game.imagePath}`}
@@ -44,7 +45,7 @@ const GameItem: React.FC<{
       <select
         value={preference?.approvalStatus || ApprovalStatus.ASK}
         onChange={(e) => onStatusChange(game.slug, e.target.value as ApprovalStatusType)}
-        className="select select-bordered select-xs w-full"
+        className="select select-bordered select-xs w-full relative z-20"
       >
         <option value={ApprovalStatus.ASK}>Ask to Run</option>
         <option value={ApprovalStatus.ALWAYS}>Always Allow</option>

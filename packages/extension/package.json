@@ -4,7 +4,7 @@
   "version": "1.0.1",
   "type": "module",
   "scripts": {
-    "dev": "parcel watch src/manifest.json",
+    "dev": "bun run clean && parcel watch src/manifest.json",
     "clean": "rm -rf dist x-games-v$npm_package_version.zip",
     "build": "bun run clean && cp ../../README.md README.md && parcel build src/manifest.json && cp README.md dist/README.md",
     "chrome:pack": "bun run clean && bun run build && cd dist && zip -r ../x-games-v$npm_package_version.zip ."

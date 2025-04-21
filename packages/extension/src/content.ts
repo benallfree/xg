@@ -59,11 +59,7 @@ const getPreference = async (communityId: string): Promise<CommunityPreference |
 
 // Create game container with controls
 const createGameContainer = (game: Game, article: HTMLElement) => {
-  if (currentGameContainer) {
-    return
-    currentGameContainer.remove()
-  }
-
+  console.log('createGameContainer', game, article)
   const container = div(
     {
       style: `
@@ -222,6 +218,7 @@ const checkAndHandleGame = async () => {
 
     const preference = await getPreference(game.slug)
 
+    if (currentGameContainer) return
     if (preference?.approvalStatus === 'never') return
     if (preference?.approvalStatus === 'always') {
       createGameContainer(game, article)

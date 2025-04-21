@@ -15,6 +15,27 @@ interface CommunityPreference {
 let currentGameContainer: HTMLElement | null = null
 let games: Promise<Game[]> = Promise.resolve([])
 
+// Handle URL changes
+const handleUrlChange = () => {
+  if (currentGameContainer) {
+    currentGameContainer.remove()
+    currentGameContainer = null
+  }
+}
+
+// Listen for URL changes
+window.addEventListener('popstate', handleUrlChange)
+const originalPushState = history.pushState
+history.pushState = function (...args) {
+  originalPushState.apply(this, args)
+  handleUrlChange()
+}
+const originalReplaceState = history.replaceState
+history.replaceState = function (...args) {
+  originalReplaceState.apply(this, args)
+  handleUrlChange()
+}
+
 // Fetch and cache whitelist
 const loadWhitelist = async () => {
   const response = await fetch('https://xg.benallfree.com/whitelist.json')
@@ -59,6 +80,9 @@ const getPreference = async (communityId: string): Promise<CommunityPreference |
 
 // Create game container with controls
 const createGameContainer = (game: Game, article: HTMLElement) => {
+  if (currentGameContainer) {
+    cleanupGameContainer()
+  }
   console.log('createGameContainer', game, article)
   const container = div(
     {
@@ -200,8 +224,25 @@ const embedGame = (game: Game) => {
   currentGameContainer.appendChild(reportButton)
 }
 
+// Cleanup function to remove game container
+const cleanupGameContainer = () => {
+  if (currentGameContainer) {
+    currentGameContainer.remove()
+    currentGameContainer = null
+  }
+}
+
+// Track current URL for navigation detection
+let currentUrl = window.location.href
+
 // Main function to check and handle game embedding
 const checkAndHandleGame = async () => {
+  const newUrl = window.location.href
+  if (newUrl !== currentUrl) {
+    cleanupGameContainer()
+    currentUrl = newUrl
+  }
+
   const communityId = getCommunityId()
   // console.log('communityId', communityId)
   if (!communityId) return

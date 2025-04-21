@@ -10,7 +10,6 @@
     "chrome:pack": "bun run clean && bun run build && cd dist && zip -r ../x-games-v$npm_package_version.zip ."
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.2",
     "@parcel/config-webextension": "^2.14.4",
     "@parcel/transformer-postcss": "^2.14.4",
     "@parcel/transformer-raw": "^2.14.4",

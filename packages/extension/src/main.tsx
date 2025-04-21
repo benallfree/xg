@@ -143,6 +143,14 @@ const App: React.FC = () => {
           >
             Add Your Game
           </a>
+          <a
+            href="https://polar.sh/checkout/polar_c_sa5Ufn66qO35xmUFs7P0AXwqoI9ssq0kPVMWM3AnHab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary btn-sm"
+          >
+            Advertise
+          </a>
         </div>
       </div>
       {error ? (

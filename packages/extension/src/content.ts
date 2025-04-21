@@ -94,7 +94,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.communityId, 'ask')
+            savePreference(game.xCommunityId, 'ask')
           },
           style: `
             padding: 8px 16px;
@@ -118,7 +118,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
         {
           onclick: () => {
             embedGame(game)
-            savePreference(game.communityId, 'always')
+            savePreference(game.xCommunityId, 'always')
           },
           style: `
             padding: 8px 16px;
@@ -141,7 +141,7 @@ const createGameContainer = (game: Game, article: HTMLElement) => {
       button(
         {
           onclick: () => {
-            savePreference(game.communityId, 'never')
+            savePreference(game.xCommunityId, 'never')
             container.remove()
           },
           style: `
@@ -192,7 +192,7 @@ const embedGame = (game: Game) => {
 
   const reportButton = a(
     {
-      href: 'https://x.com/i/communities/1914065447114396075',
+      href: `https://github.com/benallfree/xg/discussions/new?category=q-a&title=Incident report: ${game.title} [${game.xCommunityId}]&body=x.com/i/communities/${game.xCommunityId}%0A%0A@${game.githubUsername}`,
       target: '_blank',
       style: 'display: inline-block; margin-top: 10px; color: #666; text-decoration: underline;',
     },
@@ -212,7 +212,7 @@ const checkAndHandleGame = async () => {
 
   try {
     const gamesList = await games
-    const game = gamesList.find((g: Game) => g.communityId === communityId)
+    const game = gamesList.find((g: Game) => g.xCommunityId === communityId)
     if (!game) return
 
     console.log('found matching game', game)

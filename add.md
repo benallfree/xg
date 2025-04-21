@@ -46,12 +46,13 @@ Add your game's information to `packages/site/public/whitelist.json`:
     {
       "slug": "your-game-slug",
       "url": "https://your-game-url.com",
-      "imageUrl": "/games/sugarglide/splash.jpg",
+      "imagePath": "/games/your-game-slug/splash.jpg",
       "title": "Your Game Title",
       "description": "A brief, engaging description of your game (max 150 characters)",
-      "author": "@your-x-handle",
-      "communityId": "your-x-community-id",
-      "githubUrl": "https://github.com/your-username/your-game-repo"
+      "xUsername": "your-x-handle",
+      "xCommunityId": "your-x-community-id",
+      "repoUrl": "https://github.com/your-username/your-game-repo",
+      "githubUsername": "your-github-username"
     }
   ]
 }
@@ -61,15 +62,16 @@ Add your game's information to `packages/site/public/whitelist.json`:
 
 - `slug`: Unique identifier for your game (lowercase, hyphens for spaces)
 - `url`: The URL where your game is hosted
-- `imageUrl`: Path to your splash image (we'll add this for you)
+- `imagePath`: Path to your splash image (we'll add this for you)
 - `title`: Your game's title
 - `description`: Brief description of your game
-- `author`: Your X (Twitter) handle
-- `communityId`: Your X Community ID from Step 1
+- `xUsername`: Your X (Twitter) handle (without @ symbol)
+- `xCommunityId`: Your X Community ID from Step 1
+- `githubUsername`: Your GitHub username for issue notifications
 
 ### Optional Fields
 
-- `githubUrl`: Link to your game's GitHub repository (if open source)
+- `repoUrl`: Link to your game's GitHub repository (if open source)
 
 ## Step 4: Submit a Pull Request
 

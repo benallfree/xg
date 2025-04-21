@@ -3,22 +3,24 @@
     {
       "slug": "sugarglide",
       "url": "https://sugarglide.benallfree.com",
-      "imageUrl": "/games/sugarglide/splash.jpg",
+      "imagePath": "/games/sugarglide/splash.jpg",
       "title": "Sugar Glide",
       "description": "Guide flying squirrels through the trees with their adorable baby squirrels in this fun gliding adventure!",
-      "author": "@benallfree",
-      "communityId": "1914050686272286940",
-      "githubUrl": ""
+      "xUsername": "benallfree",
+      "xCommunityId": "1914050686272286940",
+      "repoUrl": "",
+      "githubUsername": "benallfree"
     },
     {
-        "slug": "hoops",
-        "url": "https://hoops.vibeworld.ai",
-        "imageUrl": "/games/hoops/splash.jpg",
-        "title": "Hoops!",
-        "description": "Multiplayer online basketball with friends!",
-        "author": "@craigrrob",
-        "communityId": "1914099192714375596",
-        "githubUrl": ""
+      "slug": "hoops",
+      "url": "https://hoops.vibeworld.ai",
+      "imagePath": "/games/hoops/splash.jpg",
+      "title": "Hoops!",
+      "description": "Multiplayer online basketball with friends!",
+      "xUsername": "craigrrob",
+      "xCommunityId": "1914099192714375596",
+      "repoUrl": "",
+      "githubUsername": "realcraig"
     }
   ]
 }

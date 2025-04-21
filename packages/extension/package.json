@@ -1,13 +1,16 @@
 {
-  "name": "xgames-extension",
+  "name": "x-games",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "parcel watch src/manifest.json",
-    "build": "parcel build src/manifest.json"
+    "clean": "rm -rf dist x-games-v$npm_package_version.zip",
+    "build": "bun run clean && cp ../../README.md README.md && parcel build src/manifest.json && cp README.md dist/README.md",
+    "chrome:pack": "bun run clean && bun run build && cd dist && zip -r ../x-games-v$npm_package_version.zip ."
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.2",
     "@parcel/config-webextension": "^2.14.4",
     "@parcel/transformer-postcss": "^2.14.4",
     "@parcel/transformer-raw": "^2.14.4",
@@ -20,11 +23,11 @@
     "daisyui": "^5.0.27",
     "parcel": "^2.14.4",
     "postcss": "^8.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "tailwindcss": "^4.1.4",
     "vanjs-core": "^1.5.3",
-    "vanjs-ext": "^0.6.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "vanjs-ext": "^0.6.2"
   },
   "files": [
     "dist"

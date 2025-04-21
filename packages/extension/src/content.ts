@@ -235,6 +235,12 @@ const cleanupGameContainer = () => {
 // Track current URL for navigation detection
 let currentUrl = window.location.href
 
+// Check if we're inside a comment (URL pattern: https://x.com/username/status/id)
+const isInComment = () => {
+  const url = window.location.href
+  return /^https:\/\/(?:twitter|x)\.com\/[^\/]+\/status\/\d+/.test(url)
+}
+
 // Main function to check and handle game embedding
 const checkAndHandleGame = async () => {
   const newUrl = window.location.href
@@ -243,16 +249,17 @@ const checkAndHandleGame = async () => {
     currentUrl = newUrl
   }
 
+  if (!isInComment()) return
+
   const communityId = getCommunityId()
-  // console.log('communityId', communityId)
   if (!communityId) return
+
+  // Only proceed if we're in a comment and have a community ID
 
   try {
     const gamesList = await games
     const game = gamesList.find((g: Game) => g.xCommunityId === communityId)
     if (!game) return
-
-    // console.log('found matching game', game)
 
     const article = document.querySelector('article')
     if (!article) return

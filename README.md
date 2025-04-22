@@ -1,6 +1,6 @@
 # X Games 🎮
 
-A Chrome extension that enables X (Twitter) communities to embed and manage interactive games directly in their feeds.
+A Chrome extension that enables interactive games to be played directly in X (Twitter) feeds.
 
 > ⚠️ **BETA**: X Games is currently in Beta. Install the latest release from [GitHub Releases](https://github.com/benallfree/xg/releases):
 >
@@ -12,12 +12,12 @@ A Chrome extension that enables X (Twitter) communities to embed and manage inte
 ## How to Play
 
 - Install the X Games Chrome plugin
-- Use the plugin to browse to any participating X community
-- View a post, and play the game
+- Browse X. Compatible posts will be found automatically.
+- Click to play the game directly in your feed
 
 ## Adding Your Game
 
-Want to add your game to X Games? Check out our [Adding Your Game Guide](add.md) for detailed instructions.
+Want to add your game to X Games? Visit [xg.benallfree.com/add](https://xg.benallfree.com/add) to get started.
 
 ## Contributing
 

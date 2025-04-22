@@ -11,7 +11,7 @@ A Chrome extension that enables interactive games to be played directly in X (Tw
 
 ## How to Play
 
-- Install the X Games Chrome plugin
+- [Install](./INSTALL.md) the X Games Chrome plugin
 - Browse X. Compatible posts will be found automatically.
 - Click to play the game directly in your feed
 

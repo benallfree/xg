@@ -1,6 +1,7 @@
 /// <reference path="../worker-configuration.d.ts" />
 
 import { sponsors } from './sponsors'
+import { handleVerify } from './verify'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,6 +26,11 @@ export default {
     }
 
     const url = new URL(request.url)
+
+    if (url.pathname === '/api/verify' && request.method === 'POST') {
+      return handleVerify(request)
+    }
+
     if (url.pathname === '/api/sponsor') {
       const sponsor = sponsors[currentSponsorIndex]
       currentSponsorIndex = (currentSponsorIndex + 1) % sponsors.length
@@ -44,6 +50,8 @@ export default {
         headers: corsHeaders,
       })
     }
+
+    console.log(`got here`)
     // Passes the incoming request through to the assets binding.
     // No asset matched this request, so this will evaluate `not_found_handling` behavior.
     return env.ASSETS.fetch(request)

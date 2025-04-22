@@ -21,7 +21,7 @@ export const GameContainer = ({ xgame }: { xgame: XGame }) => {
     }
   }
 
-  return div(
+  const container = div(
     {
       style: () => `
       margin-top: 10px;
@@ -61,4 +61,20 @@ export const GameContainer = ({ xgame }: { xgame: XGame }) => {
       return GameEmbed({ xgame })
     }
   )
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          // console.log('out of view, isPlaying.val', isPlaying.val)
+          isPlaying.val = false
+        }
+      })
+    },
+    { threshold: 0.1 }
+  )
+
+  observer.observe(container)
+
+  return container
 }

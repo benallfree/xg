@@ -72,7 +72,7 @@ const Instructions = () => {
 }
 
 export default function Page() {
-  const [url, setUrl] = useState('https://sugarglide.benallfree.com')
+  const [url, setUrl] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle')
   const [response, setResponse] = useState<VerifyResponse | null>(null)
 

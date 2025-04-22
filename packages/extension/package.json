@@ -19,7 +19,6 @@
     "@types/chrome": "^0.0.315",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@vanilla-extract/parcel-transformer": "^1.0.14",
     "daisyui": "^5.0.27",
     "parcel": "^2.14.4",
     "postcss": "^8.5.3",

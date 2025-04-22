@@ -19,7 +19,7 @@
     }
   },
   "permissions": ["storage"],
-  "host_permissions": ["https://xg.benallfree.com/*"],
+  "host_permissions": ["https://xg.benallfree.com/*", "https://*/*"],
   "content_scripts": [
     {
       "matches": ["https://x.com/*", "https://twitter.com/*"],

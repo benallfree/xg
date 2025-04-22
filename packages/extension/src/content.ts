@@ -13,16 +13,169 @@ interface CommunityPreference {
   approvalStatus: ApprovalStatus
 }
 
+interface TwitterMeta {
+  card?: string
+  site?: string
+  title?: string
+  description?: string
+  image?: string
+  player?: string
+  playerWidth?: string
+  playerHeight?: string
+}
+
+interface XGamesResolved {
+  isGame: boolean
+  meta?: TwitterMeta
+  game?: {
+    url: string
+    title: string
+    description: string
+    slug: string
+    xCommunityId: string
+    githubUsername: string
+    xUsername: string
+    imagePath: string
+  }
+  preference?: CommunityPreference
+}
+
+// Cache map for URL resolutions
+const urlResolutionCache = new Map<string, Promise<XGamesResolved>>()
+
 let currentGameContainer: HTMLElement | null = null
 let games: Promise<Game[]> = Promise.resolve([])
 
-// Handle URL changes
-const handleUrlChange = () => {
-  if (currentGameContainer) {
-    currentGameContainer.remove()
-    currentGameContainer = null
+// Get Twitter meta tags from URL
+async function getTwitterMeta(url: string): Promise<TwitterMeta> {
+  const response = await fetch(url)
+  const html = await response.text()
+
+  // Handle t.co redirects
+  if (url.startsWith('https://t.co/')) {
+    // Try to find redirect URL in meta refresh tag
+    const metaRefreshMatch = html.match(/<META[^>]*?http-equiv="refresh"[^>]*?content="[^"]*?URL=([^"]*)">/i)
+    if (metaRefreshMatch) {
+      const redirectUrl = metaRefreshMatch[1]
+      console.log('Found redirect in meta refresh:', redirectUrl)
+      return getTwitterMeta(redirectUrl)
+    }
+
+    // Try to find redirect URL in location.replace
+    const locationReplaceMatch = html.match(/location\.replace\("([^"]+)"\)/)
+    if (locationReplaceMatch) {
+      const redirectUrl = locationReplaceMatch[1].replace(/\\/g, '')
+      console.log('Found redirect in location.replace:', redirectUrl)
+      return getTwitterMeta(redirectUrl)
+    }
+
+    // Try to find redirect URL in title
+    const titleMatch = html.match(/<title>([^<]+)<\/title>/)
+    if (titleMatch && titleMatch[1].startsWith('http')) {
+      const redirectUrl = titleMatch[1]
+      console.log('Found redirect in title:', redirectUrl)
+      return getTwitterMeta(redirectUrl)
+    }
+  }
+
+  const getMetaContent = (name: string): string | undefined => {
+    const match = html.match(new RegExp(`<meta\\s+name="twitter:${name}"\\s+content="([^"]*)"`, 'i'))
+    return match?.[1]
+  }
+
+  const meta = {
+    card: getMetaContent('card'),
+    site: getMetaContent('site'),
+    title: getMetaContent('title'),
+    description: getMetaContent('description'),
+    image: getMetaContent('image'),
+    player: getMetaContent('player'),
+    playerWidth: getMetaContent('player:width'),
+    playerHeight: getMetaContent('player:height'),
+  }
+
+  console.log('Meta tags for', url, ':', meta)
+  return meta
+}
+
+// Process external links
+async function fetchExternalLink(linkElement: HTMLAnchorElement) {
+  const href = linkElement.href
+
+  // Skip if already processed
+  let resolution = urlResolutionCache.get(href)
+  if (resolution) return
+  // Check cache first
+  console.log('Processing external link:', href)
+
+  try {
+    // Create new resolution promise if not in cache
+    resolution = (async () => {
+      const meta = await getTwitterMeta(href)
+      if (meta.card !== 'game' || !meta.player) {
+        return { isGame: false }
+      }
+
+      const preference = await getPreference(new URL(href).hostname)
+      return {
+        isGame: true,
+        meta,
+        game: {
+          url: meta.player,
+          title: meta.title || 'Game',
+          description: meta.description || 'No description available',
+          slug: new URL(href).hostname,
+          xCommunityId: '',
+          githubUsername: '',
+          xUsername: '',
+          imagePath: meta.image || '',
+        },
+        preference,
+      }
+    })()
+    urlResolutionCache.set(href, resolution)
+  } catch (error) {
+    console.error(`Error processing external link: ${error}`)
   }
 }
+
+const renderedLinks = new WeakSet<HTMLAnchorElement>()
+const renderExternalLink = async (linkElement: HTMLAnchorElement) => {
+  // If it's already rendered, don't render it again
+  if (renderedLinks.has(linkElement)) return
+  renderedLinks.add(linkElement)
+
+  try {
+    // If the fetch isn't in the cache, this is an error
+    const result = await urlResolutionCache.get(linkElement.href)
+    if (!result) {
+      console.error('No result found for', linkElement.href)
+      return
+    }
+
+    // If it's not a game link, don't render it
+    if (!result.isGame) return
+
+    console.log('Rendering external link', linkElement.href)
+
+    const approvalStatus = result.preference?.approvalStatus || 'ask'
+    if (approvalStatus === 'never') return
+
+    if (approvalStatus === 'ask') {
+      createGameContainer(result.game!, linkElement.parentElement!)
+    } else if (approvalStatus === 'always') {
+      // Replace link with placeholder
+      const placeholder = document.createElement('span')
+      placeholder.textContent = '[XGAMES]'
+      linkElement.parentNode?.replaceChild(placeholder, linkElement)
+    }
+  } catch (error) {
+    console.error('Error rendering external link', linkElement.href, error)
+  }
+}
+
+// Handle URL changes
+const handleUrlChange = () => {}
 
 // Listen for URL changes
 window.addEventListener('popstate', handleUrlChange)
@@ -68,19 +221,19 @@ const getCommunityId = () => {
 }
 
 // Save preference to chrome storage
-const savePreference = (communityId: string, status: ApprovalStatus) => {
+const savePreference = (siteHost: string, status: ApprovalStatus) => {
   chrome.storage.sync.get(['preferences'], (result: { preferences?: Record<string, CommunityPreference> }) => {
     const preferences = result.preferences || {}
-    preferences[communityId] = { approvalStatus: status }
+    preferences[siteHost] = { approvalStatus: status }
     chrome.storage.sync.set({ preferences })
   })
 }
 
 // Get preference from chrome storage
-const getPreference = async (communityId: string): Promise<CommunityPreference | undefined> => {
+const getPreference = async (siteHost: string): Promise<CommunityPreference | undefined> => {
   return new Promise((resolve) => {
     chrome.storage.sync.get(['preferences'], (result: { preferences?: Record<string, CommunityPreference> }) => {
-      resolve(result.preferences?.[communityId])
+      resolve(result.preferences?.[siteHost])
     })
   })
 }
@@ -276,10 +429,24 @@ const isInComment = () => {
 
 // Main function to check and handle game embedding
 const checkAndHandleGame = async () => {
+  console.log('Checking and handling game')
   const newUrl = window.location.href
   if (newUrl !== currentUrl) {
     cleanupGameContainer()
     currentUrl = newUrl
+  }
+
+  // Process all external links that are not x.com/twitter.com
+  const primaryColumn = document.querySelector('div[data-testid="primaryColumn"]')
+  if (primaryColumn) {
+    primaryColumn.querySelectorAll('a[href^="http"]').forEach((link) => {
+      const _link = link as HTMLAnchorElement
+      const href = _link.href
+      // Allow t.co links but skip other twitter/x domains
+      if (!href || (href.match(/^https?:\/\/(.*\.)?(x|twitter)\.com/) && !href.startsWith('https://t.co/'))) return
+      fetchExternalLink(_link)
+      renderExternalLink(_link)
+    })
   }
 
   if (!isInComment()) return

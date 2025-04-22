@@ -1,4 +1,4 @@
-export interface Sponsor {
+export type Sponsor = {
   name: string
   tagline: string
 }

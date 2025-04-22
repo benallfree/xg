@@ -9,7 +9,9 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
       <div className="navbar bg-base-100">
         <div className="navbar-start">
           <h1 className="text-xl font-semibold text-primary">
-            X Games<span className="hidden">Play the latest web games directly on X</span>
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              X Games<span className="hidden">Play the latest web games directly on X</span>
+            </a>
           </h1>
         </div>
         <div className="navbar-end">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Game } from '../../../site/components/GameCard'
-import { Footer } from '../../components/Footer'
+import { GameActions } from '../../components/GameActions'
 import { GameCard } from '../../components/GameCard'
 
 export default function Page() {
@@ -20,7 +20,7 @@ export default function Page() {
           <GameCard key={game.url} game={game} />
         ))}
       </div>
-      <Footer />
+      <GameActions />
     </div>
   )
 }

@@ -18,7 +18,7 @@
       "128": "icons/android-chrome-192x192.png"
     }
   },
-  "permissions": ["storage", "unlimitedStorage"],
+  "permissions": ["storage"],
   "host_permissions": ["https://xg.benallfree.com/*", "https://*/*"],
   "content_scripts": [
     {

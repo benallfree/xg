@@ -12,6 +12,8 @@
   },
   "devDependencies": {
     "@parcel/config-webextension": "^2.14.4",
+    "@parcel/optimizer-data-url": "2.14.4",
+    "@parcel/transformer-inline-string": "2.14.4",
     "@parcel/transformer-postcss": "^2.14.4",
     "@parcel/transformer-raw": "^2.14.4",
     "@tailwindcss/postcss": "^4.1.4",

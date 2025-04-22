@@ -1,26 +1,22 @@
-import { useEffect, useState } from 'react'
-import type { Game } from '../../../site/components/GameCard'
-import { GameActions } from '../../components/GameActions'
-import { GameCard } from '../../components/GameCard'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function Page() {
-  const [games, setGames] = useState<Game[]>([])
-
-  useEffect(() => {
-    fetch('/whitelist.json')
-      .then((res) => res.json() as Promise<{ games: Game[] }>)
-      .then((data) => setGames(data.games))
-      .catch((error) => console.error('Error loading games:', error))
-  }, [])
-
   return (
     <div className="mx-auto p-6">
-      <div className="flex flex-wrap justify-center gap-6 mt-6">
-        {games.map((game) => (
-          <GameCard key={game.url} game={game} />
-        ))}
+      <div className="flex flex-wrap flex-col gap-6 mt-6">
+        <div className="prose">
+          <p>XGames is a browser extension that allows you to play games on X.</p>
+          <a
+            href="https://github.com/benallfree/xg/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            <FontAwesomeIcon icon={faDownload} /> Install Now
+          </a>
+        </div>
       </div>
-      <GameActions />
     </div>
   )
 }

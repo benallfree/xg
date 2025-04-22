@@ -1,5 +1,5 @@
 import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
 
@@ -14,23 +14,18 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
             </a>
           </h1>
         </div>
-        <div className="navbar-end">
+        <div className="navbar-end space-x-2">
           <a
             href="https://x.com/i/communities/1914065447114396075"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-circle btn-ghost mr-2"
+            className="btn btn-circle btn-ghost"
             aria-label="Connect with us on X"
           >
             <FontAwesomeIcon icon={faXTwitter} />
           </a>
-          <a
-            href="https://github.com/benallfree/xg/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary"
-          >
-            <FontAwesomeIcon icon={faDownload} />
+          <a href="/add" className="btn btn-primary" aria-label="Add Your Game">
+            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Your Game
           </a>
         </div>
       </div>

@@ -9,4 +9,4 @@ alwaysApply: true
 * packages/extension/src/main.ts is the icon popup
 * packages/extension/src/content.ts is the entry point for the game
 * in extension, use vanjs instead of raw DOM
-* frontend is react, daisyui, tailwind, and tailwind typography
+* frontend is vike, react, daisyui, tailwind, and tailwind typography

@@ -1,0 +1,116 @@
+---
+description: anything having to do with ./packages/site or vike or routing frontend
+globs:
+alwaysApply: false
+---
+
+# Vike Routing Guide
+
+## Filesystem Routing
+
+URLs are determined by file location in the filesystem:
+
+```
+FILESYSTEM                     URL
+====================          ======
+pages/index/+Page.js          /
+pages/about/+Page.js          /about
+pages/jobs/+Page.js           /jobs
+```
+
+> Note: `pages/` and `index/` directories are always skipped in URL generation
+
+### Parameterized Routes
+
+```
+FILESYSTEM                     URL
+========================      =======================
+pages/movie/@id/+Page.js      /movie/1, /movie/2, ...
+```
+
+Parameters are available via `pageContext.routeParams.id`
+
+### Route Groups
+
+Group pages using parentheses - ignored in routing:
+
+```
+FILESYSTEM                             URL
+================================      ==================
+pages/(marketing)/index/+Page.js       /
+pages/(marketing)/about/+Page.js       /about
+pages/admin-panel/index/+Page.js       /admin-panel
+pages/admin-panel/users/+Page.js       /admin-panel/users
+```
+
+### Source Directory
+
+Files can be placed in `src/`:
+
+```
+FILESYSTEM                     URL
+========================      ======
+src/pages/index/+Page.js      /
+src/pages/about/+Page.js      /about
+```
+
+## Route String
+
+Define custom routes using Route String:
+
+```js
+// /pages/product/+route.js
+export default '/product/@id'
+```
+
+## Route Function
+
+For advanced routing logic:
+
+```js
+// /pages/product/edit/+route.js
+export function route(pageContext) {
+  const match = pageContext.urlPathname.match(/\/product\/([0-9]+)\/edit/)
+  if (!match) return false
+  const [, id] = match
+  return { routeParams: { id } }
+}
+```
+
+## Route Guards
+
+Protect pages with guard hooks:
+
+```js
+// /pages/admin/+guard.js
+import { render } from 'vike/abort'
+
+export async function guard(pageContext) {
+  if (!pageContext.user.isAdmin) {
+    throw render(401, "You aren't allowed to access this page.")
+  }
+}
+```
+
+## Domain-Driven Structure
+
+Recommended for advanced apps:
+
+```
+# Marketing Domain
+(marketing)/pages/+Layout.js
+(marketing)/pages/index/+Page.js
+(marketing)/components/ContactUs.js
+
+# Admin Domain
+admin-panel/pages/+Layout.js
+admin-panel/pages/index/+Page.js
+admin-panel/components/Charts.js
+```
+
+## Router Integration
+
+- Compatible with React Router and Vue Router (though not recommended)
+- TypeScript support for typesafe routes is in progress (#698)
+
+Source: [Vike Routing Documentation](mdc:https:/vike.dev/routing)

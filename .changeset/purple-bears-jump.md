@@ -1,5 +1,5 @@
 ---
-'@x-games/extension': patch
+'x-games': patch
 ---
 
 Add privacy/terms links, extension icons, and fix buy link

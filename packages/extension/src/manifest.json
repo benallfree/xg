@@ -1,7 +1,7 @@
 {
   "name": "X Games",
-  "description": "Embed and manage games in X communities",
-  "version": "1.1.0",
+  "description": "Play games right from your X feed.",
+  "version": "2.0.0",
   "manifest_version": 3,
   "icons": {
     "16": "icons/favicon-16x16.png",

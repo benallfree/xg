@@ -89,6 +89,14 @@ export default function Page() {
                 <code>twitter:player</code> - The URL where your game can be played
               </li>
             </ul>
+            <p>Additionally, your game and image URLs must have proper CORS headers to allow access from x.com:</p>
+            <ul>
+              <li>
+                Set <code>Access-Control-Allow-Origin</code> to either <code>*</code> or include <code>x.com</code>
+              </li>
+              <li>Both the game URL and image URL must be publicly accessible</li>
+              <li>URLs must use HTTPS for security</li>
+            </ul>
             <p>
               See this{' '}
               <a

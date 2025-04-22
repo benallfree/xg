@@ -61,31 +61,58 @@ async function validateField(name: string, value: string | undefined, meta: Twit
     }
   }
 
+  const validateUrl = async (url: string, type: 'image' | 'player'): Promise<FieldValidation> => {
+    try {
+      const parsedUrl = new URL(url)
+
+      if (!parsedUrl.protocol || !parsedUrl.host) {
+        return { value: url, status: 'error', message: `${type} URL must be absolute` }
+      }
+
+      if (parsedUrl.protocol !== 'https:') {
+        return { value: url, status: 'error', message: `${type} URL must use HTTPS` }
+      }
+
+      const response = await fetch(url, {
+        method: type === 'image' ? 'GET' : 'HEAD',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      })
+      if (!response.ok) {
+        return { value: url, status: 'error', message: `${type} URL is not accessible` }
+      }
+
+      const corsHeader = response.headers.get('access-control-allow-origin')
+      console.log('corsHeader', type, url, corsHeader, response.headers)
+      if (!corsHeader || (corsHeader !== '*' && !corsHeader.includes('x.com'))) {
+        return { value: url, status: 'error', message: `${type} URL does not allow access from x.com` }
+      }
+
+      if (type === 'image') {
+        const contentType = response.headers.get('content-type')
+        if (!contentType || !contentType.startsWith('image/')) {
+          return { value: url, status: 'error', message: 'URL does not point to a valid image' }
+        }
+      }
+
+      return { value: url, status: 'ok' }
+    } catch {
+      return { value: url, status: 'error', message: 'Invalid URL or not accessible' }
+    }
+  }
+
   switch (name) {
     case 'card':
       return value !== 'game' ? { value, status: 'error', message: 'Must be "game"' } : { value, status: 'ok' }
 
     case 'image':
-      try {
-        const url = new URL(value)
-        if (!url.protocol || !url.host) {
-          return { value, status: 'error', message: 'Image URL must be absolute' }
-        }
-        const response = await fetch(value)
-        return response.ok
-          ? { value, status: 'ok' }
-          : { value, status: 'error', message: 'Image URL is not accessible' }
-      } catch {
-        return { value, status: 'error', message: 'Invalid URL or not absolute' }
-      }
+      return await validateUrl(value, 'image')
 
     case 'player':
-      try {
-        const response = await fetch(value)
-        return response.ok ? { value, status: 'ok' } : { value, status: 'error', message: 'URL is not accessible' }
-      } catch {
-        return { value, status: 'error', message: 'Invalid URL or not accessible' }
-      }
+      return await validateUrl(value, 'player')
 
     default:
       return { value, status: 'ok' }

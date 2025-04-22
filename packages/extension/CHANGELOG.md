@@ -1,5 +1,19 @@
 # x-games
 
+## 2.0.0
+
+### Major Changes
+
+- Recognize any link with a twitter:card=game meta tag
+- All games work inline in feeds
+- Remove X Community requirement
+- Add twitter:card meta validator
+
+### Patch Changes
+
+- Add privacy/terms links, extension icons, and fix buy link
+- New logo
+
 ## 1.1.0
 
 ### Minor Changes

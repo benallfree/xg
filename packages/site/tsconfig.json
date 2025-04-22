@@ -10,19 +10,10 @@
     "noEmit": true,
     "moduleResolution": "Bundler",
     "target": "ES2022",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "types": [
-      "vite/client",
-      "vike-react"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["vite/client", "vike-react", "./worker-configuration.d.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "exclude": [
-    "dist"
-  ]
+  "exclude": ["dist"]
 }

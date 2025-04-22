@@ -1,35 +1,4 @@
-interface TwitterMeta {
-  card?: string
-  site?: string
-  title?: string
-  description?: string
-  image?: string
-  player?: string
-  playerWidth?: string
-  playerHeight?: string
-}
-
-interface VerifyRequest {
-  url: string
-}
-
-interface FieldValidation {
-  value: string | undefined
-  status: 'ok' | 'error'
-  message?: string
-}
-
-interface VerifyResponse {
-  success: boolean
-  fields: {
-    card: FieldValidation
-    site: FieldValidation
-    title: FieldValidation
-    description: FieldValidation
-    image: FieldValidation
-    player: FieldValidation
-  }
-}
+import { FieldValidation, GameRecord, TwitterMeta, VerifyResponse } from './types'
 
 async function getTwitterMeta(url: string): Promise<TwitterMeta> {
   const response = await fetch(url)
@@ -82,19 +51,26 @@ async function validateField(name: string, value: string | undefined, meta: Twit
         },
       })
       if (!response.ok) {
-        return { value: url, status: 'error', message: `${type} URL is not accessible` }
+        return { value: url, status: 'error', message: `${type} URL cannot be reached (status ${response.status})` }
       }
 
       const corsHeader = response.headers.get('access-control-allow-origin')
-      console.log('corsHeader', type, url, corsHeader, response.headers)
-      if (!corsHeader || (corsHeader !== '*' && !corsHeader.includes('x.com'))) {
-        return { value: url, status: 'error', message: `${type} URL does not allow access from x.com` }
+      // console.log('corsHeader', type, url, corsHeader, response.headers)
+      if (
+        !corsHeader ||
+        (corsHeader !== '*' && !corsHeader.includes('x.com') && !corsHeader.includes('xg.benallfree.com'))
+      ) {
+        return {
+          value: url,
+          status: 'error',
+          message: `${type} URL must allow access from x.com and xg.benallfree.com (or '*')`,
+        }
       }
 
       if (type === 'image') {
         const contentType = response.headers.get('content-type')
         if (!contentType || !contentType.startsWith('image/')) {
-          return { value: url, status: 'error', message: 'URL does not point to a valid image' }
+          return { value: url, status: 'error', message: 'URL must point to a valid image' }
         }
       }
 
@@ -119,52 +95,71 @@ async function validateField(name: string, value: string | undefined, meta: Twit
   }
 }
 
-export async function handleVerify(request: Request): Promise<Response> {
-  const body = (await request.json()) as VerifyRequest
-  const { url } = body
+export const inFlightVerifications = new Map<string, Promise<VerifyResponse>>()
 
-  if (!url) {
-    return new Response(JSON.stringify({ error: 'URL is required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
+export const makeVerifyKey = (url: string) => `verify:${url}`
+
+export async function handleVerify(url: string, ctx: DurableObjectState, force?: boolean): Promise<VerifyResponse> {
+  const cached = await ctx.storage.get<VerifyResponse>(makeVerifyKey(url))
+  if (cached) {
+    const now = Date.now()
+    if (now - (cached.lastChecked || 0) < 1000 * 60 * 60 * 24 && !force) {
+      // 24 hours
+      return cached
+    }
   }
 
-  try {
-    const meta = await getTwitterMeta(url)
+  let promise = inFlightVerifications.get(url)
+  if (promise) {
+    return promise
+  }
 
-    const fields = {
-      card: await validateField('card', meta.card, meta),
-      site: await validateField('site', meta.site, meta),
-      title: await validateField('title', meta.title, meta),
-      description: await validateField('description', meta.description, meta),
-      image: await validateField('image', meta.image, meta),
-      player: await validateField('player', meta.player, meta),
-    }
-
-    const success = Object.values(fields).every((field) => field.status === 'ok')
-
-    const response: VerifyResponse = {
-      success,
-      fields,
-    }
-
-    return new Response(JSON.stringify(response), {
-      status: success ? 200 : 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  } catch (error) {
-    console.error(error)
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: 'Failed to fetch or parse URL',
-        fields: null,
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
+  promise = (async (): Promise<VerifyResponse> => {
+    if (!url) {
+      return {
+        verified: false,
+        error: 'URL is required',
       }
-    )
-  }
+    }
+
+    try {
+      const meta = await getTwitterMeta(url)
+
+      const fields = {
+        card: await validateField('card', meta.card, meta),
+        site: await validateField('site', meta.site, meta),
+        title: await validateField('title', meta.title, meta),
+        description: await validateField('description', meta.description, meta),
+        image: await validateField('image', meta.image, meta),
+        player: await validateField('player', meta.player, meta),
+      }
+
+      const success = Object.values(fields).every((field) => field.status === 'ok')
+
+      const response: VerifyResponse = {
+        verified: success,
+        fields,
+        lastChecked: Date.now(),
+      }
+
+      if (success) {
+        const key = makeVerifyKey(url)
+        await ctx.storage.put<GameRecord>(key, meta as GameRecord)
+      }
+
+      return response
+    } catch (error) {
+      console.error(error)
+      return {
+        verified: false,
+        lastChecked: Date.now(),
+        error: 'Failed to fetch or parse URL',
+      }
+    } finally {
+      inFlightVerifications.delete(url)
+    }
+  })()
+
+  inFlightVerifications.set(url, promise)
+  return promise
 }

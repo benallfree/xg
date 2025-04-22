@@ -2,6 +2,14 @@ name = "x-games"
 compatibility_date = "2025-04-03"
 main = "./server/index.ts"
 
+[[durable_objects.bindings]]
+name = "XGAMES_DO"
+class_name = "XGamesDo"
+
+[[migrations]]
+    tag = "v1"
+    new_sqlite_classes = [ "XGamesDo" ]
+
 [assets]
   directory = "./dist/client"
   binding = "ASSETS"

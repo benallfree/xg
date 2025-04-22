@@ -1,5 +1,4 @@
-import { faXTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faGithub, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
 
@@ -24,8 +23,14 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
           >
             <FontAwesomeIcon icon={faXTwitter} />
           </a>
-          <a href="/add" className="btn btn-primary" aria-label="Add Your Game">
-            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Your Game
+          <a
+            href="https://github.com/benallfree/xg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-circle btn-ghost"
+            aria-label="View the source code on GitHub"
+          >
+            <FontAwesomeIcon icon={faGithub} />
           </a>
         </div>
       </div>

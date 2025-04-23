@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export function Hero() {
   return (
-    <div className="hero min-h-[50vh]">
+    <div className="hero min-h-[50vh] bg-base-200">
       <div className="hero-content text-center">
         <div className="max-w-2xl">
           <h1 className="text-5xl font-bold mb-8">Play Games on X</h1>

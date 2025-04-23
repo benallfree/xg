@@ -144,7 +144,15 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
 
       if (success) {
         const key = makeVerifyKey(url)
-        await ctx.storage.put<GameRecord>(key, meta as GameRecord)
+        await ctx.storage.put<GameRecord>(key, {
+          card: fields.card.value!,
+          site: fields.site.value!,
+          title: fields.title.value!,
+          description: fields.description.value!,
+          image: fields.image.value!,
+          player: fields.player.value!,
+          featuredAt: 0,
+        })
       }
 
       return response

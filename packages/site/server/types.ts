@@ -59,4 +59,5 @@ export type GameRecord = {
   description: string
   image: string
   player: string
+  featuredAt: number
 }

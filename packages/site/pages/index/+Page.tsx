@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { GameRecord } from '../../server/types'
-import { GamesGrid } from './GamesGrid'
+import { GamesSection } from './GamesSection'
 import { Hero } from './Hero'
 
 export default function Page() {
@@ -12,10 +12,17 @@ export default function Page() {
       .then((data) => setGames(data as GameRecord[]))
   }, [])
 
+  const featuredGames = games
+    .filter((game) => game.featuredAt > 0)
+    .sort((a, b) => (b.featuredAt || 0) - (a.featuredAt || 0))
+
+  const nonFeaturedGames = games.filter((game) => !game.featuredAt)
+
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen">
       <Hero />
-      <GamesGrid games={games} />
+      {featuredGames.length > 0 && <GamesSection title="Featured Games" games={featuredGames} />}
+      <GamesSection title="All Games" games={nonFeaturedGames} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { faGithub, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { XGame } from '../../extension/src/types'
+import type { XGame } from '../../../extension/src/types'
 
 export function GameCard({ game }: { game: XGame }) {
   return (

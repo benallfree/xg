@@ -32,6 +32,17 @@ export class XGamesDo extends DurableObject {
     return res
   }
 
+  async feature(url: string) {
+    const key = `verify:${url}`
+    const game = await this.ctx.storage.get<GameRecord>(key)
+    if (!game) {
+      return { error: 'Game not found' }
+    }
+    game.featuredAt = Date.now()
+    await this.ctx.storage.put(key, game)
+    return game
+  }
+
   async getAllGames() {
     const games: GameRecord[] = []
     const result = await this.ctx.storage.list<GameRecord>({ prefix: 'verify:' })

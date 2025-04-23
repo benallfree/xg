@@ -62,6 +62,21 @@ export default {
       })
     }
 
+    if (url.pathname === '/api/feature') {
+      const { searchParams } = url
+      const gameUrl = searchParams.get('url')
+      if (!gameUrl) {
+        return Response.json({ error: 'url parameter is required' }, { status: 400 })
+      }
+      const result = await stub.feature(gameUrl)
+      return Response.json(result, {
+        headers: {
+          ...corsHeaders,
+          ...noCacheHeaders,
+        },
+      })
+    }
+
     if (url.pathname === '/api/hit') {
       const body = await request.json<{ url: string }>()
       if (!body.url) {

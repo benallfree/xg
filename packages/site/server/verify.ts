@@ -1,6 +1,83 @@
 import { FieldValidation, GameRecord, TwitterMeta, VerifyResponse } from './types'
 
-async function getTwitterMeta(url: string): Promise<TwitterMeta> {
+// Shared CORS validation function
+async function validateCors(url: string, type: 'page' | 'image' | 'player'): Promise<FieldValidation> {
+  try {
+    const parsedUrl = new URL(url)
+
+    if (!parsedUrl.protocol || !parsedUrl.host) {
+      return { value: url, status: 'error', message: `${type} URL must be absolute` }
+    }
+
+    if (parsedUrl.protocol !== 'https:') {
+      return { value: url, status: 'error', message: `${type} URL must use HTTPS` }
+    }
+
+    // Test CORS for each required origin
+    const requiredOrigins = ['https://x.com', 'https://xg.benallfree.com']
+    const corsResults = await Promise.all(
+      requiredOrigins.map(async (origin) => {
+        const headers = {
+          Origin: origin,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        }
+
+        const response = await fetch(url, {
+          method: type === 'image' ? 'GET' : 'HEAD',
+          headers,
+        })
+        console.log({ url, headers })
+
+        if (!response.ok) {
+          return { origin, error: `URL cannot be reached (status ${response.status})` }
+        }
+
+        const corsHeader = response.headers.get('access-control-allow-origin')
+        console.log({ url, corsHeader })
+        if (!corsHeader) {
+          return { origin, error: 'No CORS header returned' }
+        }
+
+        if (corsHeader === '*') {
+          return { origin, allowed: true }
+        }
+
+        if (corsHeader !== origin) {
+          return { origin, error: `Invalid CORS header: ${corsHeader}` }
+        }
+
+        return { origin, allowed: true }
+      })
+    )
+
+    const failedOrigins = corsResults.filter((result) => 'error' in result)
+    if (failedOrigins.length > 0) {
+      // Just report the first failure
+      const failure = failedOrigins[0] as { origin: string; error: string }
+      return {
+        value: url,
+        status: 'error',
+        message: `${type} URL not accessible from ${failure.origin}: ${failure.error}`,
+      }
+    }
+
+    return { value: url, status: 'ok' }
+  } catch (error) {
+    return { value: url, status: 'error', message: 'Invalid URL or not accessible' }
+  }
+}
+
+async function getTwitterMeta(url: string): Promise<TwitterMeta & { corsValidation?: FieldValidation }> {
+  // First validate CORS on the main URL
+  const corsValidation = await validateCors(url, 'page')
+  if (corsValidation.status === 'error') {
+    return {
+      corsValidation,
+    }
+  }
+
   const response = await fetch(url)
   const html = await response.text()
 
@@ -18,6 +95,7 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
     player: getMetaContent('player'),
     playerWidth: getMetaContent('player:width'),
     playerHeight: getMetaContent('player:height'),
+    corsValidation,
   }
 }
 
@@ -30,65 +108,15 @@ async function validateField(name: string, value: string | undefined, meta: Twit
     }
   }
 
-  const validateUrl = async (url: string, type: 'image' | 'player'): Promise<FieldValidation> => {
-    try {
-      const parsedUrl = new URL(url)
-
-      if (!parsedUrl.protocol || !parsedUrl.host) {
-        return { value: url, status: 'error', message: `${type} URL must be absolute` }
-      }
-
-      if (parsedUrl.protocol !== 'https:') {
-        return { value: url, status: 'error', message: `${type} URL must use HTTPS` }
-      }
-
-      const response = await fetch(url, {
-        method: type === 'image' ? 'GET' : 'HEAD',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      })
-      if (!response.ok) {
-        return { value: url, status: 'error', message: `${type} URL cannot be reached (status ${response.status})` }
-      }
-
-      const corsHeader = response.headers.get('access-control-allow-origin')
-      // console.log('corsHeader', type, url, corsHeader, response.headers)
-      if (
-        !corsHeader ||
-        (corsHeader !== '*' && !corsHeader.includes('x.com') && !corsHeader.includes('xg.benallfree.com'))
-      ) {
-        return {
-          value: url,
-          status: 'error',
-          message: `${type} URL must allow access from x.com and xg.benallfree.com (or '*')`,
-        }
-      }
-
-      if (type === 'image') {
-        const contentType = response.headers.get('content-type')
-        if (!contentType || !contentType.startsWith('image/')) {
-          return { value: url, status: 'error', message: 'URL must point to a valid image' }
-        }
-      }
-
-      return { value: url, status: 'ok' }
-    } catch {
-      return { value: url, status: 'error', message: 'Invalid URL or not accessible' }
-    }
-  }
-
   switch (name) {
     case 'card':
       return value !== 'game' ? { value, status: 'error', message: 'Must be "game"' } : { value, status: 'ok' }
 
     case 'image':
-      return await validateUrl(value, 'image')
+      return await validateCors(value, 'image')
 
     case 'player':
-      return await validateUrl(value, 'player')
+      return await validateCors(value, 'player')
 
     default:
       return { value, status: 'ok' }
@@ -124,6 +152,22 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
 
     try {
       const meta = await getTwitterMeta(url)
+
+      // If CORS validation failed, return that error
+      if (meta.corsValidation?.status === 'error') {
+        return {
+          verified: false,
+          error: meta.corsValidation.message,
+          fields: {
+            card: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            site: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            title: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            description: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            image: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            player: { value: undefined, status: 'error', message: 'CORS validation failed' },
+          },
+        }
+      }
 
       const fields = {
         card: await validateField('card', meta.card, meta),

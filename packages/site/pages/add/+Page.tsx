@@ -2,7 +2,9 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { VerifyResponse } from '../../server/types'
-import { Instructions } from './Instructions'
+import { CorsExamples } from './CorsExamples'
+import { HowItWorks } from './HowItWorks'
+import { MetaTagsExample } from './MetaTagsExample'
 import { SuccessMessage } from './SuccessMessage'
 import { ValidationResults } from './ValidationResults'
 
@@ -90,7 +92,13 @@ export default function Page() {
 
       {response?.fields && !response.verified && <ValidationResults fields={response.fields} />}
 
-      {!response?.verified && <Instructions />}
+      {!response?.verified && (
+        <div className="space-y-4">
+          <HowItWorks />
+          <MetaTagsExample />
+          <CorsExamples />
+        </div>
+      )}
 
       {response?.verified && response.fields && (
         <SuccessMessage fields={response.fields} url={url} onReset={handleReset} />

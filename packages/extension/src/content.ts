@@ -19,7 +19,7 @@ const renderExternalLink = async (linkElement: HTMLAnchorElement) => {
     const playerUrl = result.meta.player
     if (!playerUrl) return
 
-    console.log('Rendering external link', playerUrl)
+    console.log(`Rendering external link ${linkElement.href} -> ${playerUrl}`)
 
     const xgame = await getGame(playerUrl)
     console.log('before GaemContainer', xgame)
@@ -50,6 +50,10 @@ const checkAndHandleGame = async () => {
       const href = _link.href
       // Allow t.co links but skip other twitter/x domains
       if (!href.startsWith('https://t.co/')) return
+      // Skip rich media preview links (they have complex nested divs or images)
+      if (_link.querySelector('div, img')) return
+      // Skip "From domain.com" attribution links
+      if (_link.textContent?.startsWith('From ')) return
       if (processedLinks.has(_link)) return
       processedLinks.add(_link)
       renderExternalLink(_link)

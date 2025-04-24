@@ -89,7 +89,9 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
     title: getMetaContent('title'),
     description: getMetaContent('description'),
     image: getMetaContent('image'),
-    player: getMetaContent('player'),
+    player: getMetaContent('player')?.includes('?')
+      ? `${getMetaContent('player')}&embed=xgames`
+      : `${getMetaContent('player')}?embed=xgames`,
     playerWidth: getMetaContent('player:width'),
     playerHeight: getMetaContent('player:height'),
   }

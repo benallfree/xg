@@ -24,11 +24,13 @@ async function validateCors(url: string, type: 'page' | 'image' | 'player'): Pro
           Expires: '0',
         }
 
-        const response = await fetch(url, {
+        const testUrl = type === 'player' ? `${url}${url.includes('?') ? '&' : '?'}embed=xgames` : url
+
+        const response = await fetch(testUrl, {
           method: type === 'image' ? 'GET' : 'HEAD',
           headers,
         })
-        console.log({ url, headers })
+        console.log({ url: testUrl, headers })
 
         if (!response.ok) {
           return { origin, error: `URL cannot be reached (status ${response.status})` }

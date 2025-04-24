@@ -4,49 +4,8 @@ import { saveGameMeta } from './storage'
 // Cache map for URL resolutions
 const urlResolutionCache = new Map<string, Promise<XGamesResolved | undefined>>()
 
-// Required origins that must be allowed by CORS
-const REQUIRED_ORIGINS = ['https://x.com', 'https://xg.benallfree.com']
-
-// Test CORS for a specific origin
-async function testCorsForOrigin(url: string, origin: string): Promise<boolean> {
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Origin: origin,
-      },
-    })
-    const corsHeader = response.headers.get('Access-Control-Allow-Origin')
-    if (!corsHeader) {
-      console.warn(`No CORS header returned for origin ${origin}`)
-      return false
-    }
-    if (corsHeader === '*' || corsHeader === origin) {
-      return true
-    }
-    console.warn(`Invalid CORS header for ${origin}:`, corsHeader)
-    return false
-  } catch (error) {
-    console.warn(`CORS test failed for ${origin}:`, error)
-    return false
-  }
-}
-
 // Get Twitter meta tags from URL
 async function getTwitterMeta(url: string): Promise<TwitterMeta> {
-  // Test CORS for each required origin
-  const corsResults = await Promise.all(
-    REQUIRED_ORIGINS.map(async (origin) => ({
-      origin,
-      allowed: await testCorsForOrigin(url, origin),
-    }))
-  )
-
-  const missingOrigins = corsResults.filter((result) => !result.allowed).map((result) => result.origin)
-
-  if (missingOrigins.length > 0) {
-    console.warn('Missing CORS access for origins:', missingOrigins)
-  }
-
   // Proceed with the actual request
   const response = await fetch(url)
   const html = await response.text()

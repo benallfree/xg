@@ -36,8 +36,8 @@ export const PlayButton = ({ faviconUrl }: { faviconUrl: string }) =>
       },
       div({
         style: `
-          width: 32px;
-          height: 32px;
+          width: 40px;
+          height: 40px;
           background-image: url('${faviconUrl}');
           background-size: contain;
           background-position: center;

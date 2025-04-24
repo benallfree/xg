@@ -1,8 +1,8 @@
 import van from 'vanjs-core'
 import { ApprovalStatus, type XGame } from '../types'
 import { updateGamePreferences } from '../utils/storage'
-import { GameCard } from './GameCard'
-import { GameEmbed } from './GameEmbed'
+import { GameCard } from './GameCard/GameCard'
+import { GameEmbed } from './GameEmbed/GameEmbed'
 import { SecurityPrompt } from './SecurityPrompt'
 
 const { div, button, a } = van.tags

@@ -1,5 +1,5 @@
 import van from 'vanjs-core'
-import type { XGame } from '../types'
+import type { XGame } from '../../types'
 import { Footer } from './Footer'
 
 const { div, a, iframe } = van.tags

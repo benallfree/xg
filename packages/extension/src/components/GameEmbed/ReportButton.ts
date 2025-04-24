@@ -1,5 +1,5 @@
 import van from 'vanjs-core'
-import { XGame } from '../types'
+import { XGame } from '../../types'
 
 const { a } = van.tags
 

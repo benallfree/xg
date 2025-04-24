@@ -1,6 +1,6 @@
 import van from 'vanjs-core'
-import type { Sponsor as SponsorType } from '../../../site/server/sponsors'
-import { getSponsor } from '../api'
+import type { Sponsor as SponsorType } from '../../../../site/server/sponsors'
+import { getSponsor } from '../../api'
 
 const { div, a, iframe } = van.tags
 

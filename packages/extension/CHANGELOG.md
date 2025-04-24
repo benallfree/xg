@@ -1,5 +1,14 @@
 # x-games
 
+## 2.1.1
+
+### Patch Changes
+
+- 8c11bec: fix: sponsor display in MiniSponsor component
+- df75aac: fix: adjust image display properties in GamesSection
+- 7a25b89: ensure HTTPS for URLs in imageLoader
+- 536c404: enh: update PlayButton dimensions
+
 ## 2.1.0
 
 ### Minor Changes

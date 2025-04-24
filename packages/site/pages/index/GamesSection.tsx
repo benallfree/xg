@@ -14,7 +14,7 @@ export function GamesSection({ title, games }: GamesSectionProps) {
           <div key={game.site || game.player} className="card bg-base-100 shadow-xl">
             {game.image && (
               <figure>
-                <img src={game.image} alt={game.title || 'Game thumbnail'} className="w-full h-48 object-cover" />
+                <img src={game.image} alt={game.title || 'Game thumbnail'} className="w-full h-auto object-contain" />
               </figure>
             )}
             <div className="card-body">

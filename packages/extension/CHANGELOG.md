@@ -1,5 +1,22 @@
 # x-games
 
+## 2.1.0
+
+### Minor Changes
+
+- 8016b91: Add game directory and featured games section
+- 04fcb2f: Add it tracking
+
+### Patch Changes
+
+- 8016b91: Implement enhanced URL validation and CORS handling
+- Add logo to default layout
+- Remove unused CORS validation code
+- 8016b91: Remove unused permissions and update documentation
+- 8016b91: Improve external link logging and filtering system to avoid duplicate card rendering
+- c96c415: Add ?embed=xgames support
+- 8016b91: Update icon assets, favicon, and add logo to layout
+
 ## 2.0.0
 
 ### Major Changes

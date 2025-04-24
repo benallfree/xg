@@ -16,7 +16,7 @@
     "dev": "bun run clean && parcel watch src/manifest.json",
     "clean": "rm -rf dist ",
     "clean:zip": "rm -rf x-games-v$npm_package_version.zip",
-    "build": "bun run clean && cp ../../README.md README.md && parcel build src/manifest.json && cp README.md dist/README.md",
+    "build": "bun run clean && cp ../../README.md . && cp ../../INSTALL.md . && parcel build src/manifest.json && cp README.md dist && cp INSTALL.md dist",
     "chrome:pack": "bun run clean && bun run clean:zip && bun run build && cd dist && zip -r ../x-games-v$npm_package_version.zip ."
   },
   "devDependencies": {

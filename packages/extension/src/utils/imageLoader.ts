@@ -1,5 +1,6 @@
 // Import favicon directly as a data URL
 import faviconDataUrl from 'raw:../icons/android-chrome-512x512.png'
+import { ensureHttps } from './url'
 
 // Cache for blob URLs to avoid recreating them
 const blobCache = new Map<string, string>()
@@ -10,7 +11,7 @@ export async function createImageBlobUrl(imageUrl: string): Promise<string> {
   if (cached) return cached
 
   try {
-    const response = await fetch(imageUrl)
+    const response = await fetch(ensureHttps(imageUrl))
     const blob = await response.blob()
     const blobUrl = URL.createObjectURL(blob)
     blobCache.set(imageUrl, blobUrl)

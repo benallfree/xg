@@ -1,5 +1,6 @@
 import type { TwitterMeta, XGamesResolved } from '../types'
 import { saveGameMeta } from './storage'
+import { ensureHttps } from './url'
 
 // Cache map for URL resolutions
 const urlResolutionCache = new Map<string, Promise<XGamesResolved | undefined>>()
@@ -7,7 +8,7 @@ const urlResolutionCache = new Map<string, Promise<XGamesResolved | undefined>>(
 // Get Twitter meta tags from URL
 async function getTwitterMeta(url: string): Promise<TwitterMeta> {
   // Proceed with the actual request
-  const response = await fetch(url)
+  const response = await fetch(ensureHttps(url))
   const html = await response.text()
 
   // Handle t.co redirects
@@ -15,7 +16,7 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
     // Try to find redirect URL in meta refresh tag
     const metaRefreshMatch = html.match(/<META[^>]*?http-equiv="refresh"[^>]*?content="[^"]*?URL=([^"]*)">/i)
     if (metaRefreshMatch) {
-      const redirectUrl = metaRefreshMatch[1]
+      const redirectUrl = ensureHttps(metaRefreshMatch[1])
       console.log('Found redirect in meta refresh:', redirectUrl)
       return getTwitterMeta(redirectUrl)
     }
@@ -23,7 +24,7 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
     // Try to find redirect URL in location.replace
     const locationReplaceMatch = html.match(/location\.replace\("([^"]+)"\)/)
     if (locationReplaceMatch) {
-      const redirectUrl = locationReplaceMatch[1].replace(/\\/g, '')
+      const redirectUrl = ensureHttps(locationReplaceMatch[1].replace(/\\/g, ''))
       console.log('Found redirect in location.replace:', redirectUrl)
       return getTwitterMeta(redirectUrl)
     }
@@ -31,7 +32,7 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
     // Try to find redirect URL in title
     const titleMatch = html.match(/<title>([^<]+)<\/title>/)
     if (titleMatch && titleMatch[1].startsWith('http')) {
-      const redirectUrl = titleMatch[1]
+      const redirectUrl = ensureHttps(titleMatch[1])
       console.log('Found redirect in title:', redirectUrl)
       return getTwitterMeta(redirectUrl)
     }
@@ -39,18 +40,18 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
 
   const getMetaContent = (name: string): string | undefined => {
     const match = html.match(new RegExp(`<meta\\s+name="twitter:${name}"\\s+content="([^"]*)"`, 'i'))
-    return match?.[1]
+    const content = match?.[1]
+    return content && name === 'player' ? ensureHttps(content) : content
   }
 
+  const player = getMetaContent('player')
   return {
     card: getMetaContent('card'),
     site: getMetaContent('site'),
     title: getMetaContent('title'),
     description: getMetaContent('description'),
-    image: getMetaContent('image'),
-    player: getMetaContent('player')?.includes('?')
-      ? `${getMetaContent('player')}&embed=xgames`
-      : `${getMetaContent('player')}?embed=xgames`,
+    image: ensureHttps(getMetaContent('image') || ''),
+    player: player?.includes('?') ? `${player}&embed=xgames` : player ? `${player}?embed=xgames` : undefined,
     playerWidth: getMetaContent('player:width'),
     playerHeight: getMetaContent('player:height'),
   }

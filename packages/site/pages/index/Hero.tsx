@@ -1,4 +1,4 @@
-import { faDownload, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCrown, faDownload, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export function Hero() {
@@ -19,6 +19,13 @@ export function Hero() {
             </a>
             <a href="/add" className="btn btn-secondary btn-lg" aria-label="Add Your Game">
               <FontAwesomeIcon icon={faPlus} className="mr-2" /> Add Your Game
+            </a>
+            <a
+              href="https://buy.polar.sh/polar_cl_2OTxm1sA4VhtFBz9RIlWYkP1urmJ0v4M7AhMU0LR2X4"
+              className="btn btn-accent btn-lg"
+              aria-label="Get Featured"
+            >
+              <FontAwesomeIcon icon={faCrown} className="mr-2" /> Get Featured
             </a>
           </div>
         </div>

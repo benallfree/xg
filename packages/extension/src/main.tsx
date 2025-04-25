@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ApprovalStatus, type XGame } from './types'
+import { getFaviconUrl } from './utils/imageLoader'
 import { addStorageListener, getXGames, updateGamePreferences } from './utils/storage'
 
 const GameItem: React.FC<{
@@ -75,10 +76,15 @@ const App: React.FC = () => {
     addStorageListener(setDiscoveredGames)
   }, [])
 
+  const faviconUrl = getFaviconUrl()
+
   return (
     <div className="p-4 max-w-2xl mx-auto space-y-4">
       <div className="text-center space-y-2">
-        <h1 className="text-xl font-semibold text-primary">X Games v{chrome.runtime.getManifest().version}</h1>
+        <h1 className="text-xl font-semibold text-primary">
+          <img src={faviconUrl} alt="X Games" className="w-6 h-6 inline-block mr-2" />X Games v
+          {chrome.runtime.getManifest().version}
+        </h1>
         <div className="flex gap-2 justify-center">
           <a
             href="https://x.com/i/communities/1914065447114396075"

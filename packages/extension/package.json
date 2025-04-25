@@ -20,6 +20,10 @@
     "chrome:pack": "bun run clean && bun run clean:zip && bun run build && cd dist && zip -r ../x-games-v$npm_package_version.zip ."
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@parcel/config-webextension": "^2.14.4",
     "@parcel/optimizer-data-url": "2.14.4",
     "@parcel/transformer-inline-string": "2.14.4",

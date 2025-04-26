@@ -1,5 +1,6 @@
 import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
 import { VerifyResponse } from '../../server/types'
 
 interface SuccessMessageProps {
@@ -9,6 +10,7 @@ interface SuccessMessageProps {
 }
 
 export const SuccessMessage = ({ fields, url, onReset }: SuccessMessageProps) => {
+  const [copied, setCopied] = useState(false)
   const makeCta = (title: string, url: string) =>
     `Play ${title} with me! Install the @xgamesproj Chrome extension to play right here in the post.\n\nLeave a comment with your high score ${url}`
 
@@ -31,10 +33,12 @@ export const SuccessMessage = ({ fields, url, onReset }: SuccessMessageProps) =>
               className="btn btn-primary btn-sm absolute top-4 right-4 gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
               onClick={() => {
                 navigator.clipboard.writeText(makeCta(fields?.title.value || '', url))
+                setCopied(true)
+                setTimeout(() => setCopied(false), 2000)
               }}
             >
-              <FontAwesomeIcon icon={faCopy} />
-              Copy
+              <FontAwesomeIcon icon={copied ? faCheck : faCopy} />
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         </div>

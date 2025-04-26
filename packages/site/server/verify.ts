@@ -36,6 +36,14 @@ async function validateCors(url: string, type: 'page' | 'image' | 'player'): Pro
           return { origin, error: `URL cannot be reached (status ${response.status})` }
         }
 
+        // Check X-Frame-Options header for player URLs
+        if (type === 'player') {
+          const xFrameOptions = response.headers.get('x-frame-options')
+          if (xFrameOptions?.toUpperCase() === 'DENY') {
+            return { origin, error: 'X-Frame-Options: DENY header prevents embedding' }
+          }
+        }
+
         const corsHeader = response.headers.get('access-control-allow-origin')
         console.log({ url, corsHeader })
         if (!corsHeader) {

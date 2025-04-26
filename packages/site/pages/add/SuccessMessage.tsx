@@ -10,7 +10,7 @@ interface SuccessMessageProps {
 
 export const SuccessMessage = ({ fields, url, onReset }: SuccessMessageProps) => {
   const makeCta = (title: string, url: string) =>
-    `${title} is now playable on X Games! Install the @xgamesproj Chrome extension to enjoy ${title} and more games right in your X feed. ${url}`
+    `Play ${title} with me! Install the @xgamesproj Chrome extension to play right here in the post.\n\nLeave a comment with your high score ${url}`
 
   return (
     <div className="mt-8 space-y-6">

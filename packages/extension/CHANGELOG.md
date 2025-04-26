@@ -1,5 +1,14 @@
 # x-games
 
+## 2.1.2
+
+### Patch Changes
+
+- f8b9600: feat: add Get Featured button to Hero
+- c99eb26: feat: validate X-Frame-Options for player URLs
+- 225e026: fix: add clipboard-write permission to iframe
+- a6a6f27: feat: add favicon to X Games header
+
 ## 2.1.1
 
 ### Patch Changes

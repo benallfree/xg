@@ -10,6 +10,7 @@ export const GameEmbed = ({ xgame }: { xgame: XGame }) => {
   return div(
     iframe({
       src: xgame.meta.player,
+      allow: 'clipboard-write',
       style: `
       width: 100%;
       height: 400px;

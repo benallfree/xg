@@ -1,9 +1,9 @@
 // X Games Share Button Implementation
-const XGamesShare = {
+const XGames = {
   // Track initialized containers
   _initialized: new WeakSet(),
 
-  initButton: function (container) {
+  initShareButton: function (container) {
     // Skip if already initialized
     if (this._initialized.has(container)) return
 
@@ -66,7 +66,7 @@ const XGamesShare = {
             transform: translateY(-50%);
             width: 16px;
             height: 16px;
-            background: url('/xgames.webp') no-repeat center;
+            background: url('https://xg.benallfree.com/xgames.webp') no-repeat center;
             background-size: contain;
           }
   
@@ -83,7 +83,7 @@ const XGamesShare = {
 
     // Initialize any existing share containers
     document.querySelectorAll('.x-share').forEach((container) => {
-      this.initButton(container)
+      this.initShareButton(container)
     })
 
     // Watch for dynamically added share containers
@@ -93,10 +93,10 @@ const XGamesShare = {
           if (node.nodeType === 1) {
             // Element node
             if (node.classList?.contains('x-share')) {
-              this.initButton(node)
+              this.initShareButton(node)
             }
             node.querySelectorAll?.('.x-share').forEach((container) => {
-              this.initButton(container)
+              this.initShareButton(container)
             })
           }
         })
@@ -119,7 +119,7 @@ const XGamesShare = {
 
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => XGamesShare.init())
+  document.addEventListener('DOMContentLoaded', () => XGames.init())
 } else {
-  XGamesShare.init()
+  XGames.init()
 }

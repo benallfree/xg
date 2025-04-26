@@ -16,6 +16,9 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
           </h1>
         </div>
         <div className="navbar-end space-x-2">
+          <a href="/sdk" className="btn btn-ghost">
+            SDK
+          </a>
           <a
             href="https://x.com/i/communities/1914065447114396075"
             target="_blank"

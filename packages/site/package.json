@@ -2,6 +2,8 @@
   "name": "x-games-site",
   "scripts": {
     "dev": "vike dev",
+    "dev:worker": "wrangler dev",
+    "types": "wrangler types",
     "build": "vike build",
     "preview": "vike preview",
     "deploy": "bun run build && wrangler deploy"
@@ -27,7 +29,7 @@
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3",
     "vite": "^6.3.2",
-    "wrangler": "^4.12.0"
+    "wrangler": "^4.13.2"
   },
   "type": "module"
 }

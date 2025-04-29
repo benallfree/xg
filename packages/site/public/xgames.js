@@ -15,9 +15,9 @@ const XGames = {
       const gameName = container.dataset.name
       const score = container.dataset.score || '0'
 
-      // Get URL from data attribute, twitter:player meta tag, or current location
+      // Get URL from data attribute, twitter:game meta tag, or current location
       const gameUrl =
-        container.dataset.url || document.querySelector('meta[name="twitter:player"]')?.content || window.location.href
+        container.dataset.url || document.querySelector('meta[name="twitter:game"]')?.content || window.location.href
 
       const text = `I made it to ${score} on ${gameName}. Install @xgamesproj to play right here on X and leave a comment with your high score ${gameUrl}`
 

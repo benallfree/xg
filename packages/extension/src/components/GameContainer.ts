@@ -8,7 +8,7 @@ import { SecurityPrompt } from './SecurityPrompt'
 const { div, button, a } = van.tags
 
 export const GameContainer = ({ xgame }: { xgame: XGame }) => {
-  console.log(`GameContainer for ${xgame.meta.player}`, xgame)
+  console.log(`GameContainer for ${xgame.meta.game}`, xgame)
   const isSecurityPromptOpen = van.state(false)
   const isPlaying = van.state(false)
 
@@ -45,7 +45,7 @@ export const GameContainer = ({ xgame }: { xgame: XGame }) => {
           isSecurityPromptOpen.val = false
         },
         onAlwaysPlay: () => {
-          updateGamePreferences(xgame.meta.player || '', { approvalStatus: ApprovalStatus.Ask })
+          updateGamePreferences(xgame.meta.game || '', { approvalStatus: ApprovalStatus.Ask })
           isPlaying.val = true
           isSecurityPromptOpen.val = false
         },

@@ -41,19 +41,19 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta> {
   const getMetaContent = (name: string): string | undefined => {
     const match = html.match(new RegExp(`<meta\\s+name="twitter:${name}"\\s+content="([^"]*)"`, 'i'))
     const content = match?.[1]
-    return content && name === 'player' ? ensureHttps(content) : content
+    return content && name === 'game' ? ensureHttps(content) : content
   }
 
-  const player = getMetaContent('player')
+  const game = getMetaContent('game')
   return {
     card: getMetaContent('card'),
     site: getMetaContent('site'),
     title: getMetaContent('title'),
     description: getMetaContent('description'),
     image: ensureHttps(getMetaContent('image') || ''),
-    player: player?.includes('?') ? `${player}&embed=xgames` : player ? `${player}?embed=xgames` : undefined,
-    playerWidth: getMetaContent('player:width'),
-    playerHeight: getMetaContent('player:height'),
+    game: game?.includes('?') ? `${game}&embed=xgames` : game ? `${game}?embed=xgames` : undefined,
+    gameWidth: getMetaContent('game:width'),
+    gameHeight: getMetaContent('game:height'),
   }
 }
 
@@ -63,10 +63,10 @@ export async function resolveUrl(url: string): Promise<XGamesResolved | undefine
     resolution = (async () => {
       try {
         const meta = await getTwitterMeta(url)
-        if (meta.card !== 'game' || !meta.player) {
+        if (meta.card !== 'game' || !meta.game) {
           return undefined
         }
-        await saveGameMeta(meta.player || '', meta)
+        await saveGameMeta(meta.game || '', meta)
         return { isGame: true, meta }
       } catch (error) {
         console.warn(`Error resolving URL ${url}`, error)

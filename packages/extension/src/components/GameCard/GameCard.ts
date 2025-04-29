@@ -16,7 +16,7 @@ export const GameCard = ({ xgame, onPlay }: { xgame: XGame; onPlay: () => void }
     getImageBlobUrl(xgame.meta.image).then((url) => (imageBlobUrl.val = url))
   }
 
-  console.log(`GameCard rendered ${xgame.meta.player}`)
+  console.log(`GameCard rendered ${xgame.meta.game}`)
   const card = div(
     {
       style: `

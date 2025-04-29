@@ -17,7 +17,7 @@ const GameItem: React.FC<{
       <h3 className="card-title text-sm mb-1">{xgame.meta.title || 'Unknown Game'}</h3>
       <select
         value={xgame.preferences.approvalStatus}
-        onChange={(e) => onStatusChange(xgame.meta.player!, e.target.value as ApprovalStatus)}
+        onChange={(e) => onStatusChange(xgame.meta.game!, e.target.value as ApprovalStatus)}
         className="select select-bordered select-xs w-full relative z-20"
       >
         <option value={ApprovalStatus.Ask}>Ask to Run</option>

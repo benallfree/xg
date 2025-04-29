@@ -2,9 +2,9 @@ import { ApprovalStatus, type XGame, type XGamePreferences } from '../types'
 
 const STORAGE_PREFIX = 'xgame:'
 
-function getStorageKey(playerUrl: string): string {
-  // Replace special characters and make URL safe for storage key
-  return STORAGE_PREFIX + encodeURIComponent(playerUrl)
+function getStorageKey(gameUrl: string): string {
+  // Prefix to avoid collisions with other extensions
+  return STORAGE_PREFIX + encodeURIComponent(gameUrl)
 }
 
 function isGameKey(key: string): boolean {
@@ -12,89 +12,73 @@ function isGameKey(key: string): boolean {
 }
 
 function getPlayerUrl(key: string): string {
-  return decodeURIComponent(key.slice(STORAGE_PREFIX.length))
+  return decodeURIComponent(key.replace(STORAGE_PREFIX, ''))
 }
 
 export async function getXGames(): Promise<Record<string, XGame>> {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(null, (result) => {
-      const games: Record<string, XGame> = {}
-      for (const [key, value] of Object.entries(result)) {
-        console.log('key', key, 'value', value)
-        if (isGameKey(key)) {
-          const playerUrl = getPlayerUrl(key)
-          games[playerUrl] = value as XGame
-        }
-      }
-      resolve(games)
-    })
+  const games: Record<string, XGame> = {}
+  const items = await chrome.storage.local.get(null)
+  Object.entries(items).forEach(([key, value]) => {
+    if (!key.startsWith(STORAGE_PREFIX)) return
+    const gameUrl = getPlayerUrl(key)
+    games[gameUrl] = value as XGame
   })
+  return games
 }
 
-export async function saveGameMeta(playerUrl: string, meta: XGame['meta']): Promise<void> {
-  const key = getStorageKey(playerUrl)
-  const existing = await getGame(playerUrl)
-
+export async function saveGameMeta(gameUrl: string, meta: XGame['meta']): Promise<void> {
+  const key = getStorageKey(gameUrl)
+  const existing = await getGame(gameUrl)
   const xgame: XGame = {
     meta,
-    preferences: existing.preferences,
+    preferences: existing?.preferences || {
+      approvalStatus: ApprovalStatus.Ask,
+    },
   }
-
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ [key]: xgame }, resolve)
-  })
+  await chrome.storage.local.set({ [key]: xgame })
 }
 
-export async function updateGamePreferences(playerUrl: string, preferences: Partial<XGamePreferences>): Promise<void> {
-  const key = getStorageKey(playerUrl)
-  const existing = await new Promise<XGame | undefined>((resolve) => {
-    chrome.storage.local.get([key], (result) => resolve(result[key] as XGame | undefined))
-  })
+export async function updateGamePreferences(gameUrl: string, preferences: Partial<XGamePreferences>): Promise<void> {
+  const key = getStorageKey(gameUrl)
+  const existing = await chrome.storage.local.get(key)
+  const xgame = existing[key] as XGame | undefined
+  if (!xgame) return
 
-  if (existing) {
-    return new Promise((resolve) => {
-      chrome.storage.local.set(
-        {
-          [key]: { ...existing, preferences: { ...existing.preferences, ...preferences } },
-        },
-        resolve
-      )
-    })
+  const updatedXGame: XGame = {
+    ...xgame,
+    preferences: {
+      ...xgame.preferences,
+      ...preferences,
+    },
   }
+  await chrome.storage.local.set({ [key]: updatedXGame })
 }
 
-export const getGame = async (playerUrl: string): Promise<XGame> => {
-  const key = getStorageKey(playerUrl)
-  const existing = await new Promise<Partial<XGame> | undefined>((resolve) => {
-    chrome.storage.local.get([key], (result) => resolve(result[key] as Partial<XGame> | undefined))
-  })
-  if (!existing) return { meta: {}, preferences: { approvalStatus: ApprovalStatus.Ask } }
-  const final: XGame = {
-    ...existing,
-    meta: existing.meta || {},
-    preferences: { approvalStatus: ApprovalStatus.Ask, ...existing.preferences },
-  }
-  console.log('Game loaded', final)
-  return final
-}
-
-export function addStorageListener(callback: (games: Record<string, XGame>) => void): void {
-  chrome.storage.onChanged.addListener((changes) => {
-    const gameChanges: Record<string, XGame> = {}
-    let hasChanges = false
-
-    for (const [key, change] of Object.entries(changes)) {
-      if (isGameKey(key)) {
-        hasChanges = true
-        const playerUrl = getPlayerUrl(key)
-        if (change.newValue) {
-          gameChanges[playerUrl] = change.newValue as XGame
-        }
-      }
+export const getGame = async (gameUrl: string): Promise<XGame> => {
+  const key = getStorageKey(gameUrl)
+  const result = await chrome.storage.local.get(key)
+  const xgame = result[key] as XGame | undefined
+  if (!xgame) {
+    return {
+      meta: {},
+      preferences: {
+        approvalStatus: ApprovalStatus.Ask,
+      },
     }
+  }
+  return xgame
+}
 
-    if (hasChanges) {
-      callback(gameChanges)
+export const addStorageListener = (onChange: (games: Record<string, XGame>) => void) => {
+  chrome.storage.onChanged.addListener(async (changes) => {
+    const gameChanges: Record<string, XGame> = {}
+    Object.entries(changes).forEach(([key, change]) => {
+      if (!key.startsWith(STORAGE_PREFIX)) return
+      const gameUrl = getPlayerUrl(key)
+      if (change.newValue) gameChanges[gameUrl] = change.newValue as XGame
+    })
+    if (Object.keys(gameChanges).length > 0) {
+      onChange(await getXGames())
     }
   })
 }

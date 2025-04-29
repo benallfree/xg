@@ -11,7 +11,7 @@ export const HowItWorks = () => (
       </li>
       <li className="text-base-content/80">
         Handle embedded mode - we&apos;ll append <code className="px-1 py-0.5 bg-base-300 rounded">?embed=xgames</code>{' '}
-        to your <code className="px-1 py-0.5 bg-base-300 rounded">twitter:player</code> URL only. Use this parameter to
+        to your <code className="px-1 py-0.5 bg-base-300 rounded">twitter:game</code> URL only. Use this parameter to
         detect when your game is running in embedded mode.
       </li>
     </ol>

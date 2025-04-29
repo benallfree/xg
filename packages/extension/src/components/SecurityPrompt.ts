@@ -39,7 +39,7 @@ export const SecurityPrompt = ({
           onclick: (e: Event) => {
             e.stopPropagation()
             onPlay()
-            updateGamePreferences(xgame.meta.player || '', { approvalStatus: ApprovalStatus.Ask })
+            updateGamePreferences(xgame.meta.game || '', { approvalStatus: ApprovalStatus.Ask })
           },
           style: `
           padding: 8px 16px;
@@ -58,7 +58,7 @@ export const SecurityPrompt = ({
           onclick: (e: Event) => {
             e.stopPropagation()
             onAlwaysPlay()
-            updateGamePreferences(xgame.meta.player || '', { approvalStatus: ApprovalStatus.Always })
+            updateGamePreferences(xgame.meta.game || '', { approvalStatus: ApprovalStatus.Always })
           },
           style: `
           padding: 8px 16px;

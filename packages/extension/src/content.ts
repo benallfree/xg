@@ -16,12 +16,12 @@ const renderExternalLink = async (linkElement: HTMLAnchorElement) => {
   try {
     const result = await resolveUrl(linkElement.href)
     if (!result) return
-    const playerUrl = result.meta.player
-    if (!playerUrl) return
+    const gameUrl = result.meta.game
+    if (!gameUrl) return
 
-    console.log(`Rendering external link ${linkElement.href} -> ${playerUrl}`)
+    console.log(`Rendering external link ${linkElement.href} -> ${gameUrl}`)
 
-    const xgame = await getGame(playerUrl)
+    const xgame = await getGame(gameUrl)
     console.log('before GaemContainer', xgame)
     const container = GameContainer({ xgame: { meta: result.meta, preferences: xgame.preferences } })
     parent.parentNode?.insertBefore(container, parent.nextSibling)

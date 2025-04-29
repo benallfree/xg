@@ -5,11 +5,11 @@ import { Footer } from './Footer'
 const { div, a, iframe } = van.tags
 
 export const GameEmbed = ({ xgame }: { xgame: XGame }) => {
-  if (!xgame.meta.player) return
+  if (!xgame.meta.game) return
 
   return div(
     iframe({
-      src: xgame.meta.player,
+      src: xgame.meta.game,
       allow: 'clipboard-write',
       style: `
       width: 100%;

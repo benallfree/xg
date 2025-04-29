@@ -25,8 +25,16 @@ export const MetaTagsExample = () => (
         <span>An absolute URL to your game&apos;s preview image</span>
       </li>
       <li className="flex items-center gap-2">
-        <code className="px-2 py-1 bg-base-300 rounded">twitter:player</code>
+        <code className="px-2 py-1 bg-base-300 rounded">twitter:game</code>
         <span>The URL where your game can be played</span>
+      </li>
+      <li className="flex items-center gap-2">
+        <code className="px-2 py-1 bg-base-300 rounded">twitter:game:type</code>
+        <span>
+          Control scheme: <code className="px-2 py-1 bg-base-300 rounded">touch</code>,{' '}
+          <code className="px-2 py-1 bg-base-300 rounded">mousekeyboard</code> (default), or{' '}
+          <code className="px-2 py-1 bg-base-300 rounded">multi</code>
+        </span>
       </li>
     </ul>
 
@@ -71,9 +79,10 @@ export const MetaTagsExample = () => (
   name="twitter:image"
   content="https://sugarglide.benallfree.com/images/splash.jpg"
 />
-<meta name="twitter:player" content="https://sugarglide.benallfree.com" />
-<meta name="twitter:player:width" content="1024" />
-<meta name="twitter:player:height" content="576" />
+<meta name="twitter:game" content="https://sugarglide.benallfree.com" />
+<meta name="twitter:game:width" content="1024" />
+<meta name="twitter:game:height" content="576" />
+<meta name="twitter:game:type" content="mousekeyboard" />
 
 <!-- Facebook Open Graph Meta Tags -->
 <meta property="og:url" content="https://sugarglide.benallfree.com" />

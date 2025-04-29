@@ -1,7 +1,7 @@
 import { FieldValidation, GameRecord, TwitterMeta, VerifyResponse } from './types'
 
 // Shared CORS validation function
-async function validateCors(url: string, type: 'page' | 'image' | 'player'): Promise<FieldValidation> {
+async function validateCors(url: string, type: 'page' | 'image' | 'game'): Promise<FieldValidation> {
   try {
     const parsedUrl = new URL(url)
 
@@ -24,7 +24,7 @@ async function validateCors(url: string, type: 'page' | 'image' | 'player'): Pro
           Expires: '0',
         }
 
-        const testUrl = type === 'player' ? `${url}${url.includes('?') ? '&' : '?'}embed=xgames` : url
+        const testUrl = type === 'game' ? `${url}${url.includes('?') ? '&' : '?'}embed=xgames` : url
 
         const response = await fetch(testUrl, {
           method: type === 'image' ? 'GET' : 'HEAD',
@@ -36,8 +36,8 @@ async function validateCors(url: string, type: 'page' | 'image' | 'player'): Pro
           return { origin, error: `URL cannot be reached (status ${response.status})` }
         }
 
-        // Check X-Frame-Options header for player URLs
-        if (type === 'player') {
+        // Check X-Frame-Options header for game URLs
+        if (type === 'game') {
           const xFrameOptions = response.headers.get('x-frame-options')
           if (xFrameOptions?.toUpperCase() === 'DENY') {
             return { origin, error: 'X-Frame-Options: DENY header prevents embedding' }
@@ -96,15 +96,21 @@ async function getTwitterMeta(url: string): Promise<TwitterMeta & { corsValidati
     return match?.[1]
   }
 
+  const rawGameType = getMetaContent('game:type')
+  const gameType = (
+    rawGameType && ['touch', 'mousekeyboard', 'multi'].includes(rawGameType) ? rawGameType : 'mousekeyboard'
+  ) as 'touch' | 'mousekeyboard' | 'multi'
+
   return {
     card: getMetaContent('card'),
     site: getMetaContent('site'),
     title: getMetaContent('title'),
     description: getMetaContent('description'),
     image: getMetaContent('image'),
-    player: getMetaContent('player'),
-    playerWidth: getMetaContent('player:width'),
-    playerHeight: getMetaContent('player:height'),
+    game: getMetaContent('game'),
+    gameWidth: getMetaContent('game:width'),
+    gameHeight: getMetaContent('game:height'),
+    gameType,
     corsValidation,
   }
 }
@@ -125,8 +131,14 @@ async function validateField(name: string, value: string | undefined, meta: Twit
     case 'image':
       return await validateCors(value, 'image')
 
-    case 'player':
-      return await validateCors(value, 'player')
+    case 'game':
+      return await validateCors(value, 'game')
+
+    case 'gameType':
+      if (!['touch', 'mousekeyboard', 'multi'].includes(value)) {
+        return { value, status: 'error', message: 'Must be one of: touch, mousekeyboard, multi' }
+      }
+      return { value, status: 'ok' }
 
     default:
       return { value, status: 'ok' }
@@ -174,7 +186,7 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
             title: { value: undefined, status: 'error', message: 'CORS validation failed' },
             description: { value: undefined, status: 'error', message: 'CORS validation failed' },
             image: { value: undefined, status: 'error', message: 'CORS validation failed' },
-            player: { value: undefined, status: 'error', message: 'CORS validation failed' },
+            game: { value: undefined, status: 'error', message: 'CORS validation failed' },
           },
         }
       }
@@ -185,7 +197,7 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
         title: await validateField('title', meta.title, meta),
         description: await validateField('description', meta.description, meta),
         image: await validateField('image', meta.image, meta),
-        player: await validateField('player', meta.player, meta),
+        game: await validateField('game', meta.game, meta),
       }
 
       const success = Object.values(fields).every((field) => field.status === 'ok')
@@ -204,7 +216,7 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
           title: fields.title.value!,
           description: fields.description.value!,
           image: fields.image.value!,
-          player: fields.player.value!,
+          game: fields.game.value!,
           featuredAt: 0,
         })
       }

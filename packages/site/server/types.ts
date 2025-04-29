@@ -13,9 +13,10 @@ export interface TwitterMeta {
   title?: string
   description?: string
   image?: string
-  player?: string
-  playerWidth?: string
-  playerHeight?: string
+  game?: string
+  gameWidth?: string
+  gameHeight?: string
+  gameType?: 'touch' | 'mousekeyboard' | 'multi'
 }
 
 export type XGame = {
@@ -48,7 +49,7 @@ export interface VerifyResponse {
     title: FieldValidation
     description: FieldValidation
     image: FieldValidation
-    player: FieldValidation
+    game: FieldValidation
   }
 }
 
@@ -58,6 +59,6 @@ export type GameRecord = {
   title: string
   description: string
   image: string
-  player: string
+  game: string
   featuredAt: number
 }

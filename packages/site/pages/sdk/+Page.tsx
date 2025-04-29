@@ -42,7 +42,7 @@ export function Page() {
       <h2>1. Add Meta Tags (Server-Side)</h2>
       <p>
         These meta tags enable rich game previews when shared on X. They must be added server-side for social media
-        crawlers to see them. The twitter:player URL will also be used in the share message.
+        crawlers to see them. The twitter:game URL will also be used in the share message.
       </p>
       <CodeBlock
         language="html"
@@ -61,10 +61,26 @@ export function Page() {
 <meta name="twitter:title" content="[Game Name]" />
 <meta name="twitter:description" content="[Game Description]" />
 <meta name="twitter:image" content="https://[YOUR-DOMAIN]/[game-path]/screenshot.webp" />
-<meta name="twitter:player" content="https://[YOUR-DOMAIN]/[game-path]" />
-<meta name="twitter:player:width" content="1024" />
-<meta name="twitter:player:height" content="576" />`}
+<meta name="twitter:game" content="https://[YOUR-DOMAIN]/[game-path]" />
+<meta name="twitter:game:width" content="1024" />
+<meta name="twitter:game:height" content="576" />
+<meta name="twitter:game:type" content="mousekeyboard" />`}
       />
+
+      <p>
+        The <code>twitter:game:type</code> meta tag specifies the control scheme:
+      </p>
+      <ul>
+        <li>
+          <code>mousekeyboard</code> (default) - Game uses mouse and/or keyboard controls
+        </li>
+        <li>
+          <code>touch</code> - Game is optimized for touch input
+        </li>
+        <li>
+          <code>multi</code> - Game supports both touch and mouse/keyboard input
+        </li>
+      </ul>
 
       <h2>2. Add Share Button</h2>
       <p>Place the share button component where you want it to appear:</p>
@@ -80,7 +96,7 @@ export function Page() {
           <code>data-name</code>: Your game's name (required)
         </li>
         <li>
-          <code>data-url</code>: Override the default share URL (defaults to twitter:player meta tag URL)
+          <code>data-url</code>: Override the default share URL (defaults to twitter:game meta tag URL)
         </li>
         <li>
           <code>data-score</code>: Initial achievement/score (defaults to "0")
@@ -119,7 +135,7 @@ export function Page() {
       <ul>
         <li>Initialize when the DOM is ready</li>
         <li>Handle dynamically added share buttons</li>
-        <li>Use the twitter:player URL for sharing (unless overridden by data-url)</li>
+        <li>Use the twitter:game URL for sharing (unless overridden by data-url)</li>
         <li>Work with frameworks and dynamic content</li>
         <li>Use clipboard API for sharing</li>
         <li>Work without jQuery dependency</li>
@@ -159,7 +175,7 @@ XGames.updateScore('Level 5', '#specific-share-button')`}
           <code>data-url</code> attribute if specified
         </li>
         <li>
-          <code>twitter:player</code> meta tag if present
+          <code>twitter:game</code> meta tag if present
         </li>
         <li>Falls back to current window location</li>
       </ol>
@@ -196,9 +212,10 @@ XGames.updateScore('Level 5', '#specific-share-button')`}
   <meta name="twitter:title" content="Astray - 3D Maze Game" />
   <meta name="twitter:description" content="Navigate through an immersive 3D maze using arrow keys or vim controls. A challenging HTML5 game that tests your spatial awareness and reflexes." />
   <meta name="twitter:image" content="https://[YOUR-DOMAIN]/astray/screenshot.webp" />
-  <meta name="twitter:player" content="https://[YOUR-DOMAIN]/astray" />
-  <meta name="twitter:player:width" content="1024" />
-  <meta name="twitter:player:height" content="576" />
+  <meta name="twitter:game" content="https://[YOUR-DOMAIN]/astray" />
+  <meta name="twitter:game:width" content="1024" />
+  <meta name="twitter:game:height" content="576" />
+  <meta name="twitter:game:type" content="mousekeyboard" />
 
   <script src="https://[YOUR-DOMAIN]/xgames.js"></script>
 </head>

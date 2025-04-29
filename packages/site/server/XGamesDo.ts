@@ -1,4 +1,5 @@
 import { DurableObject } from 'cloudflare:workers'
+import { runMigrations } from './migrations'
 import { sponsors } from './sponsors'
 import { GameRecord } from './types'
 import { handleVerify } from './verify'
@@ -7,6 +8,20 @@ export class XGamesDo extends DurableObject {
   constructor(ctx: DurableObjectState, env: Env) {
     // Required, as we're extending the base class.
     super(ctx, env)
+
+    // Run migrations
+    this.runMigrations().catch(console.error)
+  }
+
+  private async runMigrations() {
+    try {
+      const migratedCount = await runMigrations(this.ctx.storage)
+      if (migratedCount > 0) {
+        console.log(`XGamesDo: Successfully migrated ${migratedCount} records`)
+      }
+    } catch (error) {
+      console.error('XGamesDo: Migration failed:', error)
+    }
   }
 
   async getNextSponsor(request: Request) {

@@ -53,6 +53,16 @@ export interface VerifyResponse {
   }
 }
 
+export type GameRecord_V1 = {
+  card: string
+  site: string
+  title: string
+  description: string
+  image: string
+  player: string
+  featuredAt: number
+}
+
 export type GameRecord = {
   card: string
   site: string
@@ -60,5 +70,8 @@ export type GameRecord = {
   description: string
   image: string
   game: string
+  gameType: 'touch' | 'mousekeyboard' | 'multi'
+  gameWidth: string
+  gameHeight: string
   featuredAt: number
 }

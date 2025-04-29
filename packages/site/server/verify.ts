@@ -217,6 +217,9 @@ export async function handleVerify(url: string, ctx: DurableObjectState, force?:
           description: fields.description.value!,
           image: fields.image.value!,
           game: fields.game.value!,
+          gameType: meta.gameType!,
+          gameWidth: meta.gameWidth!,
+          gameHeight: meta.gameHeight!,
           featuredAt: 0,
         })
       }

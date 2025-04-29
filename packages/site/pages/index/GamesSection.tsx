@@ -11,7 +11,7 @@ export function GamesSection({ title, games }: GamesSectionProps) {
       <h2 className="text-3xl font-bold mb-8 text-center">{title}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {games.map((game) => (
-          <div key={game.site || game.game} className="card bg-base-100 shadow-xl">
+          <div key={game.game} className="card bg-base-100 shadow-xl">
             {game.image && (
               <figure>
                 <img src={game.image} alt={game.title || 'Game thumbnail'} className="w-full h-auto object-contain" />

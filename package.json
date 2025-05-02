@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "@types/react-syntax-highlighter": "^15.5.13",
+    "hono": "^4.7.8",
     "react-syntax-highlighter": "^15.6.1"
   }
 }

@@ -5,6 +5,7 @@
       "name": "xes",
       "dependencies": {
         "@types/react-syntax-highlighter": "^15.5.13",
+        "hono": "^4.7.8",
         "react-syntax-highlighter": "^15.6.1",
       },
       "devDependencies": {
@@ -815,6 +816,8 @@
     "highlight.js": ["highlight.js@10.7.3", "", {}, "sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A=="],
 
     "highlightjs-vue": ["highlightjs-vue@1.0.0", "", {}, "sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA=="],
+
+    "hono": ["hono@4.7.8", "", {}, "sha512-PCibtFdxa7/Ldud9yddl1G81GjYaeMYYTq4ywSaNsYbB1Lug4mwtOMJf2WXykL0pntYwmpRJeOI3NmoDgD+Jxw=="],
 
     "htmlnano": ["htmlnano@2.1.1", "", { "dependencies": { "cosmiconfig": "^9.0.0", "posthtml": "^0.16.5", "timsort": "^0.3.0" }, "peerDependencies": { "cssnano": "^7.0.0", "postcss": "^8.3.11", "purgecss": "^6.0.0", "relateurl": "^0.2.7", "srcset": "5.0.1", "svgo": "^3.0.2", "terser": "^5.10.0", "uncss": "^0.17.3" }, "optionalPeers": ["cssnano", "postcss", "purgecss", "relateurl", "srcset", "svgo", "terser", "uncss"] }, "sha512-kAERyg/LuNZYmdqgCdYvugyLWNFAm8MWXpQMz1pLpetmCbFwoMxvkSoaAMlFrOC4OKTWI4KlZGT/RsNxg4ghOw=="],
 
